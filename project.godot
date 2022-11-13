@@ -1,0 +1,45 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "FloorArchitect",
+"language": "GDScript",
+"path": "res://addons/Floorgen/FloorArchitect.gd"
+} ]
+_global_script_class_icons={
+"FloorArchitect": ""
+}
+
+[application]
+
+config/name="FloorArchitect"
+run/main_scene="res://addons/Floorgen/FloorArchitect.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+FloorArchiect="*res://addons/Floorgen/FloorArchitect.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/Floorgen/plugin.cfg" )
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"

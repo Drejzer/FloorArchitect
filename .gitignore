@@ -1,0 +1,9 @@
+.mono/**
+.import/
+./import/**
+export_presets.cfg
+*.translation
+addons/gdUnit3/**
+addons/godot-git-plugin/**
+runtest.sh
+runtest.cmd
