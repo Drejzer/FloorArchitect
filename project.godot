@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "CellData",
+"language": "GDScript",
+"path": "res://addons/Floorgen/CellData.gd"
+}, {
 "base": "Node2D",
 "class": "FloorArchitect",
 "language": "GDScript",
 "path": "res://addons/Floorgen/FloorArchitect.gd"
 } ]
 _global_script_class_icons={
+"CellData": "",
 "FloorArchitect": ""
 }
 
