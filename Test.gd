@@ -14,6 +14,8 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_released("test"):
 		while $map.get_child_count()>0:
 			$map.get_child(0).free()
+		$FloorArchitect.Cells.clear()
+		$FloorArchitect.PotentialCells.clear()	
 		$FloorArchitect.plan_floor()
 		print("bop")
 #	pass

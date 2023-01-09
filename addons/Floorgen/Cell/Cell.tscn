@@ -22,7 +22,7 @@ width = 64
 
 [sub_resource type="Gradient" id=7]
 interpolation_mode = 2
-offsets = PoolRealArray( 0, 0.145251, 0.50838, 0.837989, 1 )
+offsets = PoolRealArray( 0, 0.120419, 0.50838, 0.890052, 1 )
 colors = PoolColorArray( 0.72549, 0.737255, 0.760784, 1, 0.514113, 0.52006, 0.531954, 1, 0.298039, 0.298039, 0.298039, 0, 0.521479, 0.527629, 0.539929, 1, 0.72549, 0.737255, 0.760784, 1 )
 
 [sub_resource type="GradientTexture" id=8]

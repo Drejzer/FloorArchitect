@@ -10,8 +10,8 @@ CellScene = ExtResource( 3 )
 
 [node name="FloorArchitect" type="Node2D" parent="."]
 script = ExtResource( 1 )
-minimum_room_count = 7
-maximum_room_count = 9
+minimum_room_count = 10
+maximum_room_count = 15
 path_cull_threshold = 5
 
 [node name="map" type="Node2D" parent="."]
