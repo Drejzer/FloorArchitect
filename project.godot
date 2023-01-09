@@ -9,30 +9,32 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node2D",
+"class": "BaseFloorArchitect",
+"language": "GDScript",
+"path": "res://addons/Floorgen/FloorArchitect/BaseFloorArchitect.gd"
+}, {
 "base": "Reference",
 "class": "CellData",
 "language": "GDScript",
 "path": "res://addons/Floorgen/CellData.gd"
 }, {
-"base": "Node2D",
-"class": "FloorArchitect",
+"base": "BaseFloorArchitect",
+"class": "TreeFloorArchitect",
 "language": "GDScript",
-"path": "res://addons/Floorgen/FloorArchitect.gd"
+"path": "res://addons/Floorgen/FloorArchitect/TreeFloorArchitect/TreeFloorArchitect.gd"
 } ]
 _global_script_class_icons={
+"BaseFloorArchitect": "",
 "CellData": "",
-"FloorArchitect": ""
+"TreeFloorArchitect": ""
 }
 
 [application]
 
 config/name="FloorArchitect"
-run/main_scene="res://addons/Floorgen/FloorArchitect.tscn"
+run/main_scene="res://addons/Floorgen/FloorArchitect/BaseFloorArchitect.tscn"
 config/icon="res://icon.png"
-
-[autoload]
-
-FloorArchiect="*res://addons/Floorgen/FloorArchitect.gd"
 
 [editor_plugins]
 
@@ -41,6 +43,14 @@ enabled=PoolStringArray( "res://addons/Floorgen/plugin.cfg" )
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
+
+[input]
+
+test={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777221,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
 
 [physics]
 

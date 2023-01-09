@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/Floorgen/FloorArchitect/BaseFloorArchitect.gd" type="Script" id=1]
+[ext_resource path="res://Test.gd" type="Script" id=2]
+[ext_resource path="res://addons/Floorgen/Cell/Cell.tscn" type="PackedScene" id=3]
+
+[node name="Test" type="Node2D"]
+script = ExtResource( 2 )
+CellScene = ExtResource( 3 )
+
+[node name="FloorArchitect" type="Node2D" parent="."]
+script = ExtResource( 1 )
+minimum_room_count = 7
+maximum_room_count = 9
+path_cull_threshold = 5
+
+[node name="map" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
+[connection signal="FloorPlanned" from="FloorArchitect" to="." method="_on_FloorArchitect_FloorPlanned"]
