@@ -15,7 +15,7 @@ func setup(var d:CellData) -> void:
 	configure_walls()
 	position=Vector2(Data.MapPos_x*Size_x,Data.MapPos_y*Size_y)
 	emit_signal("SetupFinished")
-	print("cell",position,Data.PassFlags)
+	
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

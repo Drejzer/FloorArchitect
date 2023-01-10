@@ -12,7 +12,6 @@ CellScene = ExtResource( 3 )
 script = ExtResource( 1 )
 minimum_room_count = 10
 maximum_room_count = 15
-path_cull_threshold = 5
 
 [node name="map" type="Node2D" parent="."]
 

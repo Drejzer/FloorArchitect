@@ -17,7 +17,6 @@ func _process(_delta: float) -> void:
 		$FloorArchitect.Cells.clear()
 		$FloorArchitect.PotentialCells.clear()	
 		$FloorArchitect.plan_floor()
-		print("bop")
 #	pass
 
 

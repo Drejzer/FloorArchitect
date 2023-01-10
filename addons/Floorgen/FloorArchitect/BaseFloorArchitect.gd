@@ -8,9 +8,7 @@ signal FloorPlanned
 
 export var minimum_room_count:int=6
 export var maximum_room_count:int=7
-export var path_cull_threshold:int=4
-export var loops_allowed:bool=true
-export var multicell_rooms_allowed:bool=false
+#export var multicell_rooms_allowed:bool=false
 
 ## Dictionary of cells (using CellData class) keyed by position (as 2-element array of ints)
 export(Dictionary) var Cells:={}
@@ -34,7 +32,7 @@ func plan_floor()->void:
 		_:
 			pass
 		
-	while Cells.size() < minimum_room_count && !PotentialCells.empty():
+	while Cells.size() <= maximum_room_count && !PotentialCells.empty():
 		var pckeylist= PotentialCells.keys()
 		var i = rand.randi_range(0,pckeylist.size()-1)
 		var nextc:=(PotentialCells[pckeylist[i]] as CellData)
@@ -50,7 +48,6 @@ func plan_floor()->void:
 		AddCell(nextc,rpf)
 		if PotentialCells.empty() && Cells.size()<minimum_room_count:
 			enforce_minimum()
-			pass
 	cleanup()
 	emit_signal("FloorPlanned")
 	pass
@@ -67,16 +64,17 @@ func cleanup():
 			c.PassFlags&=0b00111111
 
 func enforce_minimum()->void:
+	print("bomp")
 	var tmp :=Cells.keys()
 	tmp.shuffle()
 	var rpf:=0
-	if rand.randi_range(1,3)==1:
-		rpf=2
-	if rand.randi_range(1,3)==1:
+	if rand.randi_range(1,2)==1:
+		rpf|=2
+	if rand.randi_range(1,2)==1:
 		rpf|=8
-	if rand.randi_range(1,3)==1:
+	if rand.randi_range(1,2)==1:
 		rpf|=32
-	if rand.randi_range(1,3)==1:
+	if rand.randi_range(1,2)==1:
 		rpf|=128
 	for i in tmp:
 		if Cells[i].PassFlags&3==0:
@@ -155,7 +153,7 @@ func AddCell(var nc:CellData,var pflags:int):
 	nc.PassFlags|=nc.RequiredPassFlags
 	if nc.PassFlags&3:
 		if !Cells.has([posx,posy-1]):
-			if Cells.size()+PotentialCells.size()<maximum_room_count:
+			if Cells.size()+PotentialCells.size()<=maximum_room_count:
 				var pc=PotentialCells[[posx,posy-1]] if PotentialCells.has([posx,posy-1]) else make_template_cell()
 				pc.RequiredPassFlags|=((nc.PassFlags&3)<<4)
 				pc.PassFlags|=((nc.PassFlags&3)<<4)
@@ -167,7 +165,7 @@ func AddCell(var nc:CellData,var pflags:int):
 			nc.PassFlags|=(Cells[[posx,posy-1]].PassFlags&48)>>4
 	if nc.PassFlags&12: 
 		if !Cells.has([posx+1,posy]):
-			if Cells.size()+PotentialCells.size()<maximum_room_count:
+			if Cells.size()+PotentialCells.size()<=maximum_room_count:
 				var pc=PotentialCells[[posx+1,posy]] if PotentialCells.has([posx+1,posy]) else make_template_cell()
 				pc.RequiredPassFlags|=((nc.PassFlags&12)<<4)
 				pc.AllowedPassFlags|=(3&((nc.PassFlags&12)>>2)<<6) 
@@ -179,7 +177,7 @@ func AddCell(var nc:CellData,var pflags:int):
 			nc.PassFlags|=(Cells[[posx+1,posy]].PassFlags&192)>>4
 	if nc.PassFlags&48:
 		if !Cells.has([posx,posy+1]):
-			if Cells.size()+PotentialCells.size()<maximum_room_count:
+			if Cells.size()+PotentialCells.size()<=maximum_room_count:
 				var pc=PotentialCells[[posx,posy+1]] if PotentialCells.has([posx,posy+1]) else make_template_cell()
 				pc.RequiredPassFlags|=((nc.PassFlags&48)>>4)
 				pc.PassFlags|=((nc.PassFlags&48)>>4)
@@ -191,7 +189,7 @@ func AddCell(var nc:CellData,var pflags:int):
 			nc.PassFlags|=(Cells[[posx,posy+1]].PassFlags&3)<<4
 	if nc.PassFlags&192:
 		if !Cells.has([posx-1,posy]):
-			if Cells.size()+PotentialCells.size()<maximum_room_count:
+			if Cells.size()+PotentialCells.size()<=maximum_room_count:
 				var pc=PotentialCells[[posx-1,posy]] if PotentialCells.has([posx-1,posy]) else make_template_cell()
 				pc.RequiredPassFlags|=((nc.PassFlags&192)>>4)
 				pc.PassFlags|=((nc.PassFlags&192)>>4)
