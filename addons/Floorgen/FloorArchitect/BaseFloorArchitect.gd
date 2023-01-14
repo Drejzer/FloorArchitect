@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 class_name BaseFloorArchitect
 
@@ -32,7 +32,7 @@ func plan_floor()->void:
 		_:
 			pass
 		
-	while Cells.size() <= maximum_room_count && !PotentialCells.empty():
+	while Cells.size() < minimum_room_count && !PotentialCells.empty():
 		var pckeylist= PotentialCells.keys()
 		var i = rand.randi_range(0,pckeylist.size()-1)
 		var nextc:=(PotentialCells[pckeylist[i]] as CellData)
@@ -45,7 +45,7 @@ func plan_floor()->void:
 			rpf|=32
 		if rand.randi_range(1,5)==1:
 			rpf|=128
-		AddCell(nextc,rpf)
+			AddCell(nextc,rpf)
 		if PotentialCells.empty() && Cells.size()<minimum_room_count:
 			enforce_minimum()
 	cleanup()
@@ -64,7 +64,6 @@ func cleanup():
 			c.PassFlags&=0b00111111
 
 func enforce_minimum()->void:
-	print("bomp")
 	var tmp :=Cells.keys()
 	tmp.shuffle()
 	var rpf:=0

@@ -8,14 +8,14 @@
 script = ExtResource( 2 )
 CellScene = ExtResource( 3 )
 
-[node name="FloorArchitect" type="Node2D" parent="."]
-script = ExtResource( 1 )
-minimum_room_count = 10
-maximum_room_count = 15
-
 [node name="map" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 
-[connection signal="FloorPlanned" from="FloorArchitect" to="." method="_on_FloorArchitect_FloorPlanned"]
+[node name="FloorArchitect" type="Node" parent="."]
+script = ExtResource( 1 )
+minimum_room_count = 25
+maximum_room_count = 34
+
+[connection signal="FloorPlanned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]

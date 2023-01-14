@@ -17,10 +17,10 @@ func _process(_delta: float) -> void:
 		$FloorArchitect.Cells.clear()
 		$FloorArchitect.PotentialCells.clear()	
 		$FloorArchitect.plan_floor()
-#	pass
 
 
-func _on_FloorArchitect_FloorPlanned() -> void:
+
+func _on_BaseFloorArchitect_FloorPlanned() -> void:
 	for i in $FloorArchitect.Cells:
 			var x=CellScene.instance()
 			x.Size_x=64
