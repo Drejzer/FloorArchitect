@@ -9,6 +9,7 @@ class_name TreeFloorArchitect
 var PotentialCellKeys:=[]
 
 func plan_floor()->void:
+	.plan_floor()
 	pass
 
 func DepthFirst_cell_addition()->void:

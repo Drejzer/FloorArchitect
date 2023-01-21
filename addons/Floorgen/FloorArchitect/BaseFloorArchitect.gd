@@ -205,10 +205,10 @@ func AddCell(var nc:CellData,var pflags:int):
 
 
 func _ready() -> void:
-	rand.randomize()
+	rand=RandomNumberGenerator.new()
 	pass
 	
-func setup(var rseed:int=13375334)->void:
+func setup(var rseed:int)->void:
 	rand.seed=rseed
 	PotentialCells.clear()
 	Cells.clear()

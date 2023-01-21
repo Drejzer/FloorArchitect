@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/Floorgen/FloorArchitect/BaseFloorArchitect.gd" type="Script" id=1]
-[ext_resource path="res://Test.gd" type="Script" id=2]
+[ext_resource path="res://Demo.gd" type="Script" id=2]
 [ext_resource path="res://addons/Floorgen/Cell/Cell.tscn" type="PackedScene" id=3]
 
 [node name="Test" type="Node2D"]
