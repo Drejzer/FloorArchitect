@@ -1,12 +1,12 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://sqm00s0keroh"]
 
-[ext_resource path="res://addons/Floorgen/FloorArchitect/BaseFloorArchitect.gd" type="Script" id=1]
-[ext_resource path="res://Demo.gd" type="Script" id=2]
-[ext_resource path="res://addons/Floorgen/Cell/Cell.tscn" type="PackedScene" id=3]
+[ext_resource type="Script" path="res://addons/Floorgen/FloorArchitect/BaseFloorArchitect.gd" id="1"]
+[ext_resource type="Script" path="res://Demo.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://crw1xqhqj0g50" path="res://Cell/Cell.tscn" id="2_c5pt2"]
 
 [node name="Test" type="Node2D"]
-script = ExtResource( 2 )
-CellScene = ExtResource( 3 )
+script = ExtResource("2")
+CellScene = ExtResource("2_c5pt2")
 
 [node name="map" type="Node2D" parent="."]
 
@@ -14,7 +14,7 @@ CellScene = ExtResource( 3 )
 current = true
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource( 1 )
+script = ExtResource("1")
 minimum_room_count = 25
 maximum_room_count = 34
 

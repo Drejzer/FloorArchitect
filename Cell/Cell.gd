@@ -3,10 +3,10 @@ extends Node2D
 ## use as representation of passages
 var Data:CellData=CellData.new()
 signal SetupFinished
-export var Size_x:int
-export var Size_y:int
+@export var Size_x:int
+@export var Size_y:int
 
-func setup(var d:CellData) -> void:
+func setup(d:CellData) -> void:
 	Data.PassFlags=d.PassFlags
 	Data.RequiredPassFlags=d.RequiredPassFlags
 	Data.MapPos_x=d.MapPos_x

@@ -4,9 +4,10 @@ extends Node2D
 # Declare member variables here. Examples:
 # var a: int = 2
 # var b: String = "text"
-export(PackedScene) onready var CellScene
+@export @onready var CellScene:PackedScene
 
 func _ready() -> void:
+	randomize()
 	$FloorArchitect.setup(randi())
 # Called when the node enters the scene tree for the first time.
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -22,7 +23,7 @@ func _process(_delta: float) -> void:
 
 func _on_BaseFloorArchitect_FloorPlanned() -> void:
 	for i in $FloorArchitect.Cells:
-			var x=CellScene.instance()
+			var x=CellScene.instantiate()
 			x.Size_x=64
 			x.Size_y=64
 			x.setup($FloorArchitect.Cells[i])

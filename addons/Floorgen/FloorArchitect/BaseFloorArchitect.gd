@@ -6,16 +6,17 @@ var rand:=RandomNumberGenerator.new()
 
 signal FloorPlanned
 
-export var minimum_room_count:int=6
-export var maximum_room_count:int=7
+@export var minimum_room_count:int=6
+@export var maximum_room_count:int=7
 #export var multicell_rooms_allowed:bool=false
 
-## Dictionary of cells (using CellData class) keyed by position (as 2-element array of ints)
-export(Dictionary) var Cells:={}
-## The Packed scene that is to be used as a Cell
+## Dictionary of cells (using @ref CellData class) keyed by position (as 2-element array of ints)
+@export var Cells: Dictionary={}
 
+## Dictionary of cells, from which one of the cells can be added to the map
 var PotentialCells:={}
 
+## Function that generates the floor layout
 func plan_floor()->void:
 	var fc:=rand.randi_range(0,4)
 	match(fc):
@@ -32,7 +33,7 @@ func plan_floor()->void:
 		_:
 			pass
 		
-	while Cells.size() < minimum_room_count && !PotentialCells.empty():
+	while Cells.size() < minimum_room_count && !PotentialCells.is_empty():
 		var pckeylist= PotentialCells.keys()
 		var i = rand.randi_range(0,pckeylist.size()-1)
 		var nextc:=(PotentialCells[pckeylist[i]] as CellData)
@@ -46,12 +47,13 @@ func plan_floor()->void:
 		if rand.randi_range(1,5)==1:
 			rpf|=128
 			AddCell(nextc,rpf)
-		if PotentialCells.empty() && Cells.size()<minimum_room_count:
+		if PotentialCells.is_empty() && Cells.size()<minimum_room_count:
 			enforce_minimum()
 	cleanup()
-	emit_signal("FloorPlanned")
+	FloorPlanned.emit()
 	pass
 
+## Eliminates "open" passages to nonexisting cells
 func cleanup():
 	for c in Cells.values():
 		if c.PassFlags&3 && !Cells.has([(c as CellData).MapPos_x,(c as CellData).MapPos_y-1]):
@@ -63,6 +65,7 @@ func cleanup():
 		if c.PassFlags&192 && !Cells.has([(c as CellData).MapPos_x-1,(c as CellData).MapPos_y]):
 			c.PassFlags&=0b00111111
 
+## Forcefully adds additional room, if the minimum has not been reached
 func enforce_minimum()->void:
 	var tmp :=Cells.keys()
 	tmp.shuffle()
@@ -94,8 +97,8 @@ func enforce_minimum()->void:
 			return
 	
 
-## Adds a new cell in the specified position with the specified flags. Adds potential cells based on the flags of the added cell
-func AddNewCell(var posx:int,var posy:int,var pflags:int):
+## Adds a new cell in the specified position with the specified flags. Adds potential cells based checked the flags of the added cell
+func AddNewCell(posx:int, posy:int, pflags:int):
 	var nc:=CellData.new()
 	nc.MapPos_x=posx
 	nc.MapPos_y=posy
@@ -143,8 +146,8 @@ func AddNewCell(var posx:int,var posy:int,var pflags:int):
 			nc.PassFlags|=(Cells[[posx-1,posy]].PassFlags&12)<<4
 	pass
 	
-## Adds one of the potential cells to the floor, the pflags set the passflags
-func AddCell(var nc:CellData,var pflags:int):
+## Adds one of the potential cells to the floor
+func AddCell(nc:CellData, pflags:int):
 	var posx=nc.MapPos_x
 	var posy=nc.MapPos_y
 	nc.PassFlags=pflags
@@ -208,12 +211,14 @@ func _ready() -> void:
 	rand=RandomNumberGenerator.new()
 	pass
 	
-func setup(var rseed:int)->void:
+## Sets up the 
+func setup(rseed:int)->void:
 	rand.seed=rseed
 	PotentialCells.clear()
 	Cells.clear()
 	pass
-	
+
+## Generates a CellData instance with default data 
 func make_template_cell()->CellData:
 	var c:=CellData.new()
 	c.PassFlags=0
