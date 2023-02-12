@@ -4,6 +4,11 @@ class_name BaseFloorArchitect
 
 var rand:=RandomNumberGenerator.new()
 
+const UP := Vector2i(0,-1)
+const RIGHT := Vector2i(1,0)
+const DOWN := Vector2i(0,1)
+const LEFT := Vector2i(-1,0)
+
 signal FloorPlanned
 
 @export var minimum_room_count:int=6
@@ -56,13 +61,13 @@ func plan_floor()->void:
 ## Eliminates "open" passages to nonexisting cells
 func cleanup():
 	for c in Cells.values():
-		if c.PassFlags&3 && !Cells.has([(c as CellData).MapPos_x,(c as CellData).MapPos_y-1]):
+		if c.PassFlags&3 && !Cells.has(c.MapPos+UP):
 			c.PassFlags&=0b11111100
-		if c.PassFlags&12 && !Cells.has([(c as CellData).MapPos_x+1,(c as CellData).MapPos_y]):
+		if c.PassFlags&12 && !Cells.has(c.MapPos+RIGHT):
 			c.PassFlags&=0b11110011
-		if c.PassFlags&48 && !Cells.has([(c as CellData).MapPos_x,(c as CellData).MapPos_y+1]):
+		if c.PassFlags&48 && !Cells.has(c.MapPos+DOWN):
 			c.PassFlags&=0b11001111
-		if c.PassFlags&192 && !Cells.has([(c as CellData).MapPos_x-1,(c as CellData).MapPos_y]):
+		if c.PassFlags&192 && !Cells.has(c.MapPos+LEFT):
 			c.PassFlags&=0b00111111
 
 ## Forcefully adds additional room, if the minimum has not been reached
@@ -100,110 +105,100 @@ func enforce_minimum()->void:
 ## Adds a new cell in the specified position with the specified flags. Adds potential cells based checked the flags of the added cell
 func AddNewCell(posx:int, posy:int, pflags:int):
 	var nc:=CellData.new()
-	nc.MapPos_x=posx
-	nc.MapPos_y=posy
+	nc.MapPos=Vector2i(posx,posy)
 	nc.PassFlags=pflags
 	Cells[[posx,posy]]=nc
 	if nc.PassFlags&3:
-		if(!Cells.has([posx,posy-1])):
-			var pc=PotentialCells[[posx,posy-1]] if PotentialCells.has([posx,posy-1]) else make_template_cell()
+		if(!Cells.has(nc.MapPos+UP)):
+			var pc=PotentialCells[nc.MapPos+UP] if PotentialCells.has(nc.MapPos+UP) else make_template_cell()
 			pc.RequiredPassFlags|=((nc.PassFlags&3)<<4)
-			pc.MapPos_x=nc.MapPos_x
-			pc.MapPos_y=nc.MapPos_y-1
-			PotentialCells[[posx,posy-1]]=pc
+			pc.MapPos=Vector2i(nc.MapPos+UP)
+			PotentialCells[pc.MapPos]=pc
 		else:
 			nc.PassFlags&=0b11111100
-			nc.PassFlags|=(Cells[[posx,posy-1]].PassFlags&48)>>4
+			nc.PassFlags|=(Cells[nc.MapPos+UP].PassFlags&48)>>4
 	if nc.PassFlags&12:
-		if !Cells.has([posx+1,posy]):
-			var pc=PotentialCells[[posx+1,posy]] if PotentialCells.has([posx+1,posy]) else make_template_cell()
+		if !Cells.has(nc.MapPos+RIGHT):
+			var pc=PotentialCells[nc.MapPos+RIGHT] if PotentialCells.has(nc.MapPos+RIGHT) else make_template_cell()
 			pc.RequiredPassFlags|=((nc.PassFlags&12)<<4)
-			pc.MapPos_x=nc.MapPos_x+1
-			pc.MapPos_y=nc.MapPos_y
-			PotentialCells[[posx+1,posy]]=pc
+			pc.MapPos=nc.MapPos+RIGHT
+			PotentialCells[pc.MapPos]=pc
 		else:
 			nc.PassFlags&=0b11110011
 			nc.PassFlags|=(Cells[[posx+1,posy]].PassFlags&192)>>4
 	if nc.PassFlags&48:
-		if !Cells.has([posx,posy+1]):
-			var pc=PotentialCells[[posx,posy+1]] if PotentialCells.has([posx,posy+1]) else make_template_cell()
+		if !Cells.has(nc.MapPos+Vector2i(0,1)):
+			var pc=PotentialCells[nc.MapPos+Vector2i(0,1)] if PotentialCells.has(nc.MapPos+Vector2i(0,1)) else make_template_cell()
 			pc.RequiredPassFlags|=((nc.PassFlags&48)>>4)
-			pc.MapPos_x=nc.MapPos_x
-			pc.MapPos_y=nc.MapPos_y+1
-			PotentialCells[[posx,posy+1]]=pc
+			pc.MapPos=Vector2i(nc.MapPos+Vector2i(0,+1))
+			PotentialCells[nc.MapPos+Vector2i(0,1)]=pc
 		else:
 			nc.PassFlags&=0b11001111
-			nc.PassFlags|=(Cells[[posx,posy+1]].PassFlags&3)<<4
+			nc.PassFlags|=(Cells[nc.MapPos+Vector2i(0,1)].PassFlags&3)<<4
 	if nc.PassFlags&192:
-		if !Cells.has([posx-1,posy]):
-			var pc=PotentialCells[[posx-1,posy]] if PotentialCells.has([posx-1,posy]) else make_template_cell()
+		if !Cells.has(nc.MapPos+Vector2i(-1,0)):
+			var pc=PotentialCells[nc.MapPos+Vector2i(-1,0)] if PotentialCells.has(nc.MapPos+Vector2i(-1,0)) else make_template_cell()
 			pc.RequiredPassFlags|=((nc.PassFlags&192)>>4)
-			pc.MapPos_x=nc.MapPos_x-1
-			pc.MapPos_y=nc.MapPos_y
-			PotentialCells[[posx-1,posy]]=pc
+			pc.MapPos=Vector2i(nc.MapPos+Vector2i(-1,0))
+			PotentialCells[nc.MapPos+Vector2i(-1,0)]=pc
 		else:
 			nc.PassFlags&=0b00111111
-			nc.PassFlags|=(Cells[[posx-1,posy]].PassFlags&12)<<4
+			nc.PassFlags|=(Cells[nc.MapPos+Vector2i(-1,0)].PassFlags&12)<<4
 	pass
 	
 ## Adds one of the potential cells to the floor
-func AddCell(nc:CellData, pflags:int):
-	var posx=nc.MapPos_x
-	var posy=nc.MapPos_y
+func AddCell(nc:CellData, pflags:int,new:bool=false):
+	var pos=nc.MapPos
 	nc.PassFlags=pflags
 	nc.PassFlags&=nc.AllowedPassFlags
 	nc.PassFlags|=nc.RequiredPassFlags
 	if nc.PassFlags&3:
-		if !Cells.has([posx,posy-1]):
+		if !Cells.has(Vector2i(pos.x,pos.y-1)):
 			if Cells.size()+PotentialCells.size()<=maximum_room_count:
-				var pc=PotentialCells[[posx,posy-1]] if PotentialCells.has([posx,posy-1]) else make_template_cell()
+				var pc=PotentialCells[Vector2i(pos.x,pos.y-1)] if PotentialCells.has(Vector2i(pos.x,pos.y-1)) else make_template_cell()
 				pc.RequiredPassFlags|=((nc.PassFlags&3)<<4)
 				pc.PassFlags|=((nc.PassFlags&3)<<4)
-				pc.MapPos_x=nc.MapPos_x
-				pc.MapPos_y=nc.MapPos_y-1
-				PotentialCells[[posx,posy-1]]=pc
+				pc.MapPos=nc.MapPos-Vector2i(0,-1)
+				PotentialCells[Vector2i(pos.x,pos.y-1)]=pc
 		else:
 			nc.PassFlags&=0b11111100
-			nc.PassFlags|=(Cells[[posx,posy-1]].PassFlags&48)>>4
+			nc.PassFlags|=(Cells[Vector2i(pos.x,pos.y-1)].PassFlags&48)>>4
 	if nc.PassFlags&12: 
-		if !Cells.has([posx+1,posy]):
+		if !Cells.has(Vector2i(pos.x+1,pos.y)):
 			if Cells.size()+PotentialCells.size()<=maximum_room_count:
-				var pc=PotentialCells[[posx+1,posy]] if PotentialCells.has([posx+1,posy]) else make_template_cell()
+				var pc=PotentialCells[Vector2i(pos.x+1,pos.y)] if PotentialCells.has(Vector2i(pos.x+1,pos.y)) else make_template_cell()
 				pc.RequiredPassFlags|=((nc.PassFlags&12)<<4)
 				pc.AllowedPassFlags|=(3&((nc.PassFlags&12)>>2)<<6) 
-				pc.MapPos_x=nc.MapPos_x+1
-				pc.MapPos_y=nc.MapPos_y
-				PotentialCells[[posx+1,posy]]=pc
+				pc.MapPos=nc.MapPos+Vector2i(1,0)
+				PotentialCells[Vector2i(pos.x+1,pos.y)]=pc
 		else:
 			nc.PassFlags&-0b11110011
-			nc.PassFlags|=(Cells[[posx+1,posy]].PassFlags&192)>>4
+			nc.PassFlags|=(Cells[Vector2i(pos.x+1,pos.y)].PassFlags&192)>>4
 	if nc.PassFlags&48:
-		if !Cells.has([posx,posy+1]):
+		if !Cells.has(Vector2i(pos.x,pos.y+1)):
 			if Cells.size()+PotentialCells.size()<=maximum_room_count:
-				var pc=PotentialCells[[posx,posy+1]] if PotentialCells.has([posx,posy+1]) else make_template_cell()
+				var pc=PotentialCells[Vector2i(pos.x,pos.y+1)] if PotentialCells.has(Vector2i(pos.x,pos.y+1)) else make_template_cell()
 				pc.RequiredPassFlags|=((nc.PassFlags&48)>>4)
 				pc.PassFlags|=((nc.PassFlags&48)>>4)
-				pc.MapPos_x=nc.MapPos_x
-				pc.MapPos_y=nc.MapPos_y+1
-				PotentialCells[[posx,posy+1]]=pc
+				pc.MapPos=nc.MapPos+Vector2i(1,0)
+				PotentialCells[Vector2i(pos.x,pos.y+1)]=pc
 		else:
 			nc.PassFlags&=0b11001111
-			nc.PassFlags|=(Cells[[posx,posy+1]].PassFlags&3)<<4
+			nc.PassFlags|=(Cells[Vector2i(pos.x,pos.y+1)].PassFlags&3)<<4
 	if nc.PassFlags&192:
-		if !Cells.has([posx-1,posy]):
+		if !Cells.has(Vector2i(pos.x-1,pos.y)):
 			if Cells.size()+PotentialCells.size()<=maximum_room_count:
-				var pc=PotentialCells[[posx-1,posy]] if PotentialCells.has([posx-1,posy]) else make_template_cell()
+				var pc=PotentialCells[Vector2i(pos.x-1,pos.y)] if PotentialCells.has(Vector2i(pos.x-1,pos.y)) else make_template_cell()
 				pc.RequiredPassFlags|=((nc.PassFlags&192)>>4)
 				pc.PassFlags|=((nc.PassFlags&192)>>4)
-				pc.MapPos_x=nc.MapPos_x-1
-				pc.MapPos_y=nc.MapPos_y
-				PotentialCells[[posx-1,posy]]=pc
+				pc.MapPos=nc.MapPos+Vector2i(-1,0)
+				PotentialCells[Vector2i(pos.x-1,pos.y)]=pc
 		else:
 			nc.PassFlags&=0b00111111
-			nc.PassFlags|=(Cells[[posx-1,posy]].PassFlags&12)<<4
+			nc.PassFlags|=(Cells[Vector2i(pos.x-1,pos.y)].PassFlags&12)<<4
 			
-	Cells[[nc.MapPos_x,nc.MapPos_y]]=nc
-	PotentialCells.erase([nc.MapPos_x,nc.MapPos_y])
+	Cells[nc.MapPos]=nc
+	PotentialCells.erase(nc.MapPos)
 	pass
 
 
