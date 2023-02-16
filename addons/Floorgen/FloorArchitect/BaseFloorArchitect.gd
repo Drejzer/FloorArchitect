@@ -130,7 +130,7 @@ func AddNewCell(posx:int, posy:int, passages:Dictionary):
 			nc.PassFlags|=(Cells[nc.MapPos+Vector2i(-1,0)].PassFlags&12)<<4
 	pass
 	
-## Adds one of the potential cells to the floor
+## Adds one of the cells from [member PotentialCells] to the [member Cells] dictionary
 func AddCell(nc:CellData, pflags:int,new:bool=false):
 	var pos=nc.MapPos
 	nc.PassFlags=pflags

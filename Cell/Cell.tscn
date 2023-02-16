@@ -45,11 +45,11 @@ texture = ExtResource("2")
 position = Vector2(0, -32.5)
 
 [node name="Sprite" type="Sprite2D" parent="Passages/PN"]
+visible = false
 position = Vector2(0, 2)
 texture = SubResource("4")
 
 [node name="Sprite2" type="Sprite2D" parent="Passages/PN"]
-visible = false
 position = Vector2(0, 2)
 texture = SubResource("6")
 
@@ -62,12 +62,12 @@ texture = SubResource("8")
 position = Vector2(32.5, 0)
 
 [node name="Sprite" type="Sprite2D" parent="Passages/PE"]
+visible = false
 position = Vector2(-2, 0)
 rotation = 1.5708
 texture = SubResource("4")
 
 [node name="Sprite2" type="Sprite2D" parent="Passages/PE"]
-visible = false
 position = Vector2(-2, 0)
 rotation = 1.5708
 texture = SubResource("6")
@@ -82,12 +82,12 @@ texture = SubResource("8")
 position = Vector2(0, 32.5)
 
 [node name="Sprite" type="Sprite2D" parent="Passages/PS"]
+visible = false
 position = Vector2(0, -2)
 rotation = -3.14159
 texture = SubResource("4")
 
 [node name="Sprite2" type="Sprite2D" parent="Passages/PS"]
-visible = false
 position = Vector2(0, -2)
 rotation = -3.14159
 texture = SubResource("6")
@@ -102,12 +102,12 @@ texture = SubResource("8")
 position = Vector2(-32.5, 0)
 
 [node name="Sprite" type="Sprite2D" parent="Passages/PW"]
+visible = false
 position = Vector2(2, 0)
 rotation = -1.5708
 texture = SubResource("4")
 
 [node name="Sprite2" type="Sprite2D" parent="Passages/PW"]
-visible = false
 position = Vector2(2, 0)
 rotation = -1.5708
 texture = SubResource("6")
