@@ -23,15 +23,15 @@ func _ready() -> void:
 ## Sets up the display of 
 func configure_walls()->void:
 	match(Data.Passages[Defs.UP]):
-		Defs.PassageType.NONE:
+		Defs.PassageType.NONE,Defs.PassageType.HIDDEN:
 			$Passages/PN/Sprite.visible=true
 			$Passages/PN/Sprite2.visible=false
 			$Passages/PN/Sprite3.visible=false
-		Defs.PassageType.NORMAL:
+		Defs.PassageType.LOCKED:
 			$Passages/PN/Sprite.visible=false
 			$Passages/PN/Sprite2.visible=true
 			$Passages/PN/Sprite3.visible=false
-		Defs.PassageType.HIDDEN:
+		Defs.PassageType.NORMAL:
 			$Passages/PN/Sprite.visible=false
 			$Passages/PN/Sprite2.visible=false
 			$Passages/PN/Sprite3.visible=true
@@ -50,11 +50,11 @@ func configure_walls()->void:
 			$Passages/PE/Sprite.visible=true
 			$Passages/PE/Sprite2.visible=false
 			$Passages/PE/Sprite3.visible=false
-		Defs.PassageType.NORMAL:
+		Defs.PassageType.LOCKED:
 			$Passages/PE/Sprite.visible=false
 			$Passages/PE/Sprite2.visible=true
 			$Passages/PE/Sprite3.visible=false
-		Defs.PassageType.HIDDEN:
+		Defs.PassageType.NORMAL:
 			$Passages/PE/Sprite.visible=false
 			$Passages/PE/Sprite2.visible=false
 			$Passages/PE/Sprite3.visible=true
@@ -73,11 +73,11 @@ func configure_walls()->void:
 			$Passages/PS/Sprite.visible=true
 			$Passages/PS/Sprite2.visible=false
 			$Passages/PS/Sprite3.visible=false
-		Defs.PassageType.NORMAL:
+		Defs.PassageType.LOCKED:
 			$Passages/PS/Sprite.visible=false
 			$Passages/PS/Sprite2.visible=true
 			$Passages/PS/Sprite3.visible=false
-		Defs.PassageType.HIDDEN:
+		Defs.PassageType.NORMAL:
 			$Passages/PS/Sprite.visible=false
 			$Passages/PS/Sprite2.visible=false
 			$Passages/PS/Sprite3.visible=true
@@ -96,11 +96,11 @@ func configure_walls()->void:
 			$Passages/PW/Sprite.visible=true
 			$Passages/PW/Sprite2.visible=false
 			$Passages/PW/Sprite3.visible=false
-		Defs.PassageType.NORMAL:
+		Defs.PassageType.LOCKED:
 			$Passages/PW/Sprite.visible=false
 			$Passages/PW/Sprite2.visible=true
 			$Passages/PW/Sprite3.visible=false
-		Defs.PassageType.HIDDEN:
+		Defs.PassageType.NORMAL:
 			$Passages/PW/Sprite.visible=false
 			$Passages/PW/Sprite2.visible=false
 			$Passages/PW/Sprite3.visible=true

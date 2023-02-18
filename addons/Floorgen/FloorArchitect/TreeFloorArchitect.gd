@@ -5,13 +5,16 @@ class_name TreeFloorArchitect
 # Declare member variables here. Examples:
 # var a: int = 2
 # var b: String = "text"
+@export_enum(DFS,BFS)
 
-var PotentialCellKeys:=[]
+var Visited:=[]
 
-func plan_floor()->void:
-	super.plan_floor()
-	pass
+func GetNextCell()->CellData:
+	
 
+func AddCell(nc):
+
+## Selcts cells using DFS
 func DepthFirst_cell_addition()->void:
 	pass
 
