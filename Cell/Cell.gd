@@ -43,10 +43,10 @@ func configure_walls()->void:
 			$Passages/PN/Sprite.visible=true
 			$Passages/PN/Sprite2.visible=false
 			$Passages/PN/Sprite3.visible=false
-			Data.Passages[Defs.UP]=Defs.PassageType.NONE
+			$Passages/PN.rotation+=1
 			
 	match(Data.Passages[Defs.RIGHT]):
-		Defs.PassageType.NONE:
+		Defs.PassageType.NONE,Defs.PassageType.HIDDEN:
 			$Passages/PE/Sprite.visible=true
 			$Passages/PE/Sprite2.visible=false
 			$Passages/PE/Sprite3.visible=false
@@ -63,13 +63,13 @@ func configure_walls()->void:
 			$Passages/PE/Sprite2.visible=false
 			$Passages/PE/Sprite3.visible=false
 		_:
-			Data.Passages[Defs.RIGHT]=Defs.PassageType.NONE
+			$Passages/PE.rotation+=1
 			$Passages/PE/Sprite.visible=true
 			$Passages/PE/Sprite2.visible=false
 			$Passages/PE/Sprite3.visible=false
 			
 	match(Data.Passages[Defs.DOWN]):
-		Defs.PassageType.NONE:
+		Defs.PassageType.NONE,Defs.PassageType.HIDDEN:
 			$Passages/PS/Sprite.visible=true
 			$Passages/PS/Sprite2.visible=false
 			$Passages/PS/Sprite3.visible=false
@@ -86,13 +86,13 @@ func configure_walls()->void:
 			$Passages/PS/Sprite2.visible=false
 			$Passages/PS/Sprite3.visible=false
 		_:
-			Data.Passages[Defs.DOWN]=Defs.PassageType.NONE
+			$Passages/PS.rotation+=1
 			$Passages/PS/Sprite.visible=true
 			$Passages/PS/Sprite2.visible=false
 			$Passages/PS/Sprite3.visible=false
 			
 	match(Data.Passages[Defs.LEFT]):
-		Defs.PassageType.NONE:
+		Defs.PassageType.NONE,Defs.PassageType.HIDDEN:
 			$Passages/PW/Sprite.visible=true
 			$Passages/PW/Sprite2.visible=false
 			$Passages/PW/Sprite3.visible=false
@@ -109,7 +109,7 @@ func configure_walls()->void:
 			$Passages/PW/Sprite3.visible=false
 			$Passages/PW/Sprite2.visible=false
 		_:
-			Data.Passages[Defs.LEFT]=Defs.PassageType.NONE
+			$Passages/PW.rotation+=1
 			$Passages/PW/Sprite.visible=true
 			$Passages/PW/Sprite2.visible=false
 			$Passages/PW/Sprite3.visible=false

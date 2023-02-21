@@ -24,12 +24,17 @@ func plan_floor()->void:
 	Defs.DOWN : Defs.PassageType.NORMAL,
 	Defs.LEFT : Defs.PassageType.NORMAL})
 	
-	while Cells.size() < minimum_room_count && !PotentialCells.is_empty():
-		var nextc=GetNextCell()
-		RealizeCell(nextc)
-		if PotentialCells.is_empty() && Cells.size()<minimum_room_count:
+	while Cells.size() < maximum_room_count && !PotentialCells.is_empty():
+		if !PotentialCells.is_empty():
+			var nextc=GetNextCell()
+			RealizeCell(nextc)
+		while PotentialCells.is_empty():
 			EnforceMinimum()
+			if Cells.size()>=minimum_room_count:
+				break
+		await get_tree().process_frame
 	CleanInvalidPassages()
+	print("planned")
 	FloorPlanned.emit()
 
 ## Picks next cell to be added from [member PotentialCells]
@@ -40,20 +45,22 @@ func GetNextCell()->CellData:
 
 ## Adds a new [class CellData] in the specified position with the specified passages.
 ##
-## Creates and adds a new [class CellData] to the [member Cells], will overwrite Passages of existing cells.
+## Creates and adds a new [class CellData] to the [member Cells], will overwrite PassageType.NONE of existing cells.
 func AddNewCell(pos:Vector2i, passages:Dictionary):
 	var nc:=CreateTemplateCell()
 	nc.MapPos=pos
 	nc.Passages=passages
-	Cells[nc.MapPos]=nc
 	if !Cells.has(nc.MapPos+Defs.UP):
 		if passages[Defs.UP] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
 			var pc:CellData=PotentialCells[nc.MapPos+Defs.UP] if PotentialCells.has(nc.MapPos+Defs.UP) else CreateTemplateCell()
 			pc.Passages[Defs.DOWN]=nc.Passages[Defs.UP]
-			pc.MapPos=Vector2i(nc.MapPos+Defs.UP)
+			pc.MapPos=nc.MapPos+Defs.UP
 			PotentialCells[pc.MapPos]=pc
 	else:
-		Cells[nc.MapPos+Defs.UP].Passages[Defs.DOWN]=nc.Passages[Defs.UP]
+		if Cells[nc.MapPos+Defs.UP].Passages[Defs.DOWN] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
+			nc.Passages[Defs.UP]=Cells[nc.MapPos+Defs.UP].Passages[Defs.DOWN]
+		else:
+			Cells[nc.MapPos+Defs.UP].Passages[Defs.DOWN]=nc.Passages[Defs.UP]
 		
 	if !Cells.has(nc.MapPos+Defs.RIGHT):
 		if passages[Defs.RIGHT] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
@@ -62,7 +69,10 @@ func AddNewCell(pos:Vector2i, passages:Dictionary):
 			pc.MapPos=nc.MapPos+Defs.RIGHT
 			PotentialCells[pc.MapPos]=pc
 	else:
-		Cells[nc.MapPos+Defs.RIGHT].Passages[Defs.LEFT]=nc.Passages[Defs.RIGHT]
+		if Cells[nc.MapPos+Defs.RIGHT].Passages[Defs.LEFT] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
+			nc.Passages[Defs.RIGHT]=Cells[nc.MapPos+Defs.RIGHT].Passages[Defs.LEFT]
+		else:
+			Cells[nc.MapPos+Defs.RIGHT].Passages[Defs.LEFT]=nc.Passages[Defs.RIGHT]
 		
 	if !Cells.has(nc.MapPos+Defs.DOWN):
 		if passages[Defs.DOWN] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
@@ -71,7 +81,10 @@ func AddNewCell(pos:Vector2i, passages:Dictionary):
 			pc.Passages[Defs.UP]=nc.Passages[Defs.DOWN]
 			PotentialCells[pc.MapPos]=pc
 	else:
-		Cells[nc.MapPos+Defs.DOWN].Passages[Defs.UP]=nc.Passages[Defs.DOWN]
+		if Cells[nc.MapPos+Defs.DOWN].Passages[Defs.UP] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
+			nc.Passages[Defs.DOWN]=Cells[nc.MapPos+Defs.DOWN].Passages[Defs.UP]
+		else:
+			Cells[nc.MapPos+Defs.DOWN].Passages[Defs.UP]=nc.Passages[Defs.DOWN]
 		
 	if !Cells.has(nc.MapPos+Defs.LEFT):
 		if passages[Defs.LEFT] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
@@ -80,7 +93,11 @@ func AddNewCell(pos:Vector2i, passages:Dictionary):
 			pc.MapPos=nc.MapPos+Defs.LEFT
 			PotentialCells[pc.MapPos]=pc
 	else:
-		Cells[nc.MapPos+Defs.LEFT].Passages[Defs.RIGHT]=nc.Passages[Defs.LEFT]
+		if Cells[nc.MapPos+Defs.LEFT].Passages[Defs.RIGHT] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
+			nc.Passages[Defs.LEFT]=Cells[nc.MapPos+Defs.LEFT].Passages[Defs.RIGHT]
+		else:
+			Cells[nc.MapPos+Defs.LEFT].Passages[Defs.RIGHT]=nc.Passages[Defs.LEFT]
+	Cells[nc.MapPos]=nc
 
 ## Moves a cell from [member PotentialCells] to [member Cells]
 ##
@@ -135,31 +152,34 @@ func RealizeCell(nc:CellData):
 ## Eliminates "open" passages to nonexisting cells
 func CleanInvalidPassages():
 	for c in Cells.values():
+		print("¿",c.MapPos,c.Passages)
 		for p in c.Passages.keys():
-			if c.Passages[p] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
+			if c.Passages[p] not in [Defs.PassageType.NONE]:
 				if !Cells.has(c.MapPos+p):
 					c.Passages[p]=Defs.PassageType.NONE
+		print("¡",c.MapPos,c.Passages)
 
 ## Forcefully adds additional room, if the minimum has not been reached
 func EnforceMinimum()->void:
 	var tmp:=Cells.keys()
 	tmp.shuffle()
-	var nc=CreateTemplateCell()
+	var psg=GeneratePassages(Weigths)
 	for i in tmp:
-		if Cells[i].PassFlags&3==0:
-			#AddNewCell(i[0],i[1]-1,rpf|32)
+		if Cells[i].Passages[Defs.UP] == Defs.PassageType.NONE && !Cells.has(i+Defs.UP):
+			psg[Defs.DOWN]=Defs.PassageType.NORMAL
+			AddNewCell(i+Defs.UP,psg)
 			return
-		elif Cells[i].PassFlags&12==0:
-			Cells[i].PassFlags|=8
-			#AddNewCell(i[0]+1,i[1],rpf|128)
+		elif Cells[i].Passages[Defs.RIGHT] == Defs.PassageType.NONE && !Cells.has(i+Defs.RIGHT):
+			psg[Defs.LEFT]=Defs.PassageType.NORMAL
+			AddNewCell(i+Defs.RIGHT,psg)
 			return
-		elif Cells[i].PassFlags&48==0:
-			Cells[i].PassFlags|=32
-			#AddNewCell(i[0],i[1]+1,rpf|2)
-			return
-		elif Cells[i].PassFlags&192==0:
-			Cells[i].PassFlags|=128
-			#AddNewCell(i[0]-1,i[1],rpf|8)
+		elif Cells[i].Passages[Defs.DOWN] == Defs.PassageType.NONE && !Cells.has(i+Defs.DOWN):
+			psg[Defs.UP]=Defs.PassageType.NORMAL
+			AddNewCell(i+Defs.DOWN,psg)
+			return 
+		elif Cells[i].Passages[Defs.LEFT] == Defs.PassageType.NONE && !Cells.has(i+Defs.LEFT):
+			psg[Defs.RIGHT]=Defs.PassageType.NORMAL
+			AddNewCell(i+Defs.LEFT,psg)
 			return
 	
 
