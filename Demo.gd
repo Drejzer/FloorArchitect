@@ -16,12 +16,16 @@ func _ready() -> void:
 # Called when the node enters the scene tree for the first time.
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	var cdir=Vector2(0,0)
 	if Input.is_action_just_released("test"):
 		if!gen:
 			print('!')
 			gen=true
 			genmap()
-
+	cdir.y=-1 if Input.is_action_pressed("ui_up") else (1 if Input.is_action_pressed("ui_down") else 0)
+	cdir.x=-1 if Input.is_action_pressed("ui_left") else (1 if Input.is_action_pressed("ui_right") else 0)
+	cdir=cdir.normalized()*_delta*1000
+	$Camera2D.position+=cdir
 
 
 func genmap():
@@ -43,6 +47,5 @@ func _on_BaseFloorArchitect_FloorPlanned() -> void:
 			x.Size_y=64
 			x.setup($FloorArchitect.Cells[i])
 			$map.add_child(x,true)
-			await get_tree().process_frame
 			await get_tree().process_frame
 	pass

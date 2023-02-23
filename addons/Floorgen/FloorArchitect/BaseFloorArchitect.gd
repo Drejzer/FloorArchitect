@@ -8,9 +8,14 @@ var rand:=RandomNumberGenerator.new()
 
 signal FloorPlanned
 
-@export var Weigths:={Defs.PassageType.NONE:3,Defs.PassageType.HIDDEN:0,Defs.PassageType.NORMAL:5,Defs.PassageType.CONNECTION:0}
+@export var Weigths:={Utils.PassageType.NONE:3
+			,Utils.PassageType.NORMAL:5
+			,Utils.PassageType.HIDDEN:0
+			,Utils.PassageType.LOCKED:0
+			,Utils.PassageType.CONNECTION:0}
+			
 @export var minimum_room_count:int=6
-@export var maximum_room_count:int=7
+@export var maximum_room_count:int=9
 
 ## Dictionary of cells (using [CellData]) keyed by position (as 2-element array of ints)
 @export var Cells: Dictionary={}
@@ -19,10 +24,8 @@ var PotentialCells:Dictionary={}
 
 ## Function that generates the floor layout
 func plan_floor()->void:
-	AddNewCell(Vector2i(0,0),{Defs.UP:Defs.PassageType.NORMAL,
-	Defs.RIGHT : Defs.PassageType.NORMAL,
-	Defs.DOWN : Defs.PassageType.NORMAL,
-	Defs.LEFT : Defs.PassageType.NORMAL})
+	var init = CreateTemplateCell()
+	PotentialCells[init.MapPos]=init
 	
 	while Cells.size() < maximum_room_count && !PotentialCells.is_empty():
 		if !PotentialCells.is_empty():
@@ -50,53 +53,53 @@ func AddNewCell(pos:Vector2i, passages:Dictionary):
 	var nc:=CreateTemplateCell()
 	nc.MapPos=pos
 	nc.Passages=passages
-	if !Cells.has(nc.MapPos+Defs.UP):
-		if passages[Defs.UP] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Defs.UP] if PotentialCells.has(nc.MapPos+Defs.UP) else CreateTemplateCell()
-			pc.Passages[Defs.DOWN]=nc.Passages[Defs.UP]
-			pc.MapPos=nc.MapPos+Defs.UP
+	if !Cells.has(nc.MapPos+Utils.UP):
+		if passages[Utils.UP] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else CreateTemplateCell()
+			pc.Passages[Utils.DOWN]=nc.Passages[Utils.UP]
+			pc.MapPos=nc.MapPos+Utils.UP
 			PotentialCells[pc.MapPos]=pc
 	else:
-		if Cells[nc.MapPos+Defs.UP].Passages[Defs.DOWN] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
-			nc.Passages[Defs.UP]=Cells[nc.MapPos+Defs.UP].Passages[Defs.DOWN]
+		if Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			nc.Passages[Utils.UP]=Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN]
 		else:
-			Cells[nc.MapPos+Defs.UP].Passages[Defs.DOWN]=nc.Passages[Defs.UP]
+			Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN]=nc.Passages[Utils.UP]
 		
-	if !Cells.has(nc.MapPos+Defs.RIGHT):
-		if passages[Defs.RIGHT] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
-			var pc:CellData=(PotentialCells[nc.MapPos+Defs.RIGHT] if PotentialCells.has(nc.MapPos+Defs.RIGHT) else CreateTemplateCell())
-			pc.Passages[Defs.LEFT]=nc.Passages[Defs.RIGHT]
-			pc.MapPos=nc.MapPos+Defs.RIGHT
+	if !Cells.has(nc.MapPos+Utils.RIGHT):
+		if passages[Utils.RIGHT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			var pc:CellData=(PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else CreateTemplateCell())
+			pc.Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
+			pc.MapPos=nc.MapPos+Utils.RIGHT
 			PotentialCells[pc.MapPos]=pc
 	else:
-		if Cells[nc.MapPos+Defs.RIGHT].Passages[Defs.LEFT] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
-			nc.Passages[Defs.RIGHT]=Cells[nc.MapPos+Defs.RIGHT].Passages[Defs.LEFT]
+		if Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			nc.Passages[Utils.RIGHT]=Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT]
 		else:
-			Cells[nc.MapPos+Defs.RIGHT].Passages[Defs.LEFT]=nc.Passages[Defs.RIGHT]
+			Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
 		
-	if !Cells.has(nc.MapPos+Defs.DOWN):
-		if passages[Defs.DOWN] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Defs.DOWN] if PotentialCells.has(nc.MapPos+Defs.DOWN) else CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Defs.DOWN
-			pc.Passages[Defs.UP]=nc.Passages[Defs.DOWN]
+	if !Cells.has(nc.MapPos+Utils.DOWN):
+		if passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else CreateTemplateCell()
+			pc.MapPos=nc.MapPos+Utils.DOWN
+			pc.Passages[Utils.UP]=nc.Passages[Utils.DOWN]
 			PotentialCells[pc.MapPos]=pc
 	else:
-		if Cells[nc.MapPos+Defs.DOWN].Passages[Defs.UP] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
-			nc.Passages[Defs.DOWN]=Cells[nc.MapPos+Defs.DOWN].Passages[Defs.UP]
+		if Cells[nc.MapPos+Utils.DOWN].Passages[Utils.UP] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			nc.Passages[Utils.DOWN]=Cells[nc.MapPos+Utils.DOWN].Passages[Utils.UP]
 		else:
-			Cells[nc.MapPos+Defs.DOWN].Passages[Defs.UP]=nc.Passages[Defs.DOWN]
+			Cells[nc.MapPos+Utils.DOWN].Passages[Utils.UP]=nc.Passages[Utils.DOWN]
 		
-	if !Cells.has(nc.MapPos+Defs.LEFT):
-		if passages[Defs.LEFT] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Defs.LEFT] if PotentialCells.has(nc.MapPos+Defs.LEFT) else CreateTemplateCell()
-			pc.Passages[Defs.RIGHT]=nc.Passages[Defs.LEFT]
-			pc.MapPos=nc.MapPos+Defs.LEFT
+	if !Cells.has(nc.MapPos+Utils.LEFT):
+		if passages[Utils.LEFT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else CreateTemplateCell()
+			pc.Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
+			pc.MapPos=nc.MapPos+Utils.LEFT
 			PotentialCells[pc.MapPos]=pc
 	else:
-		if Cells[nc.MapPos+Defs.LEFT].Passages[Defs.RIGHT] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED]:
-			nc.Passages[Defs.LEFT]=Cells[nc.MapPos+Defs.LEFT].Passages[Defs.RIGHT]
+		if Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			nc.Passages[Utils.LEFT]=Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT]
 		else:
-			Cells[nc.MapPos+Defs.LEFT].Passages[Defs.RIGHT]=nc.Passages[Defs.LEFT]
+			Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
 	Cells[nc.MapPos]=nc
 
 ## Moves a cell from [member PotentialCells] to [member Cells]
@@ -106,45 +109,45 @@ func AddNewCell(pos:Vector2i, passages:Dictionary):
 func RealizeCell(nc:CellData):
 	var psgs=GeneratePassages(Weigths,nc.Passages)
 	nc.Passages=psgs
-	if !Cells.has(nc.MapPos+Defs.UP):
-		if nc.Passages[Defs.UP] not in [Defs.PassageType.NONE] \
+	if !Cells.has(nc.MapPos+Utils.UP):
+		if nc.Passages[Utils.UP] not in [Utils.PassageType.NONE] \
 		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Defs.UP] if PotentialCells.has(nc.MapPos+Defs.UP) else CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Defs.UP
-			pc.Passages[Defs.DOWN]=nc.Passages[Defs.UP]
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else CreateTemplateCell()
+			pc.MapPos=nc.MapPos+Utils.UP
+			pc.Passages[Utils.DOWN]=nc.Passages[Utils.UP]
 			PotentialCells[pc.MapPos]=pc
 	else:
-		nc.Passages[Defs.UP]=Cells[nc.MapPos+Defs.UP].Passages[Defs.DOWN]
+		nc.Passages[Utils.UP]=Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN]
 		
-	if !Cells.has(nc.MapPos+Defs.RIGHT):
-		if  nc.Passages[Defs.RIGHT] not in [Defs.PassageType.NONE] \
+	if !Cells.has(nc.MapPos+Utils.RIGHT):
+		if  nc.Passages[Utils.RIGHT] not in [Utils.PassageType.NONE] \
 		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Defs.RIGHT] if PotentialCells.has(nc.MapPos+Defs.RIGHT) else CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Defs.RIGHT
-			pc.Passages[Defs.LEFT]=nc.Passages[Defs.RIGHT]
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else CreateTemplateCell()
+			pc.MapPos=nc.MapPos+Utils.RIGHT
+			pc.Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
 			PotentialCells[pc.MapPos]=pc
 	else:
-		nc.Passages[Defs.RIGHT]=Cells[nc.MapPos+Defs.RIGHT].Passages[Defs.LEFT]
+		nc.Passages[Utils.RIGHT]=Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT]
 		
-	if !Cells.has(nc.MapPos+Defs.DOWN):
-		if nc.Passages[Defs.DOWN] not in [Defs.PassageType.NONE,Defs.PassageType.UNDEFINED] \
+	if !Cells.has(nc.MapPos+Utils.DOWN):
+		if nc.Passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED] \
 		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Defs.DOWN] if PotentialCells.has(nc.MapPos+Defs.DOWN) else CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Defs.DOWN
-			pc.Passages[Defs.UP]=nc.Passages[Defs.DOWN]
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else CreateTemplateCell()
+			pc.MapPos=nc.MapPos+Utils.DOWN
+			pc.Passages[Utils.UP]=nc.Passages[Utils.DOWN]
 			PotentialCells[pc.MapPos]=pc
 	else:
-		nc.Passages[Defs.DOWN]=Cells[nc.MapPos+Defs.DOWN].Passages[Defs.UP]
+		nc.Passages[Utils.DOWN]=Cells[nc.MapPos+Utils.DOWN].Passages[Utils.UP]
 		
-	if !Cells.has(nc.MapPos+Defs.LEFT):
-		if nc.Passages[Defs.LEFT] not in [Defs.PassageType.NONE] \
+	if !Cells.has(nc.MapPos+Utils.LEFT):
+		if nc.Passages[Utils.LEFT] not in [Utils.PassageType.NONE] \
 		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Defs.LEFT] if PotentialCells.has(nc.MapPos+Defs.LEFT) else CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Defs.LEFT
-			pc.Passages[Defs.RIGHT]=nc.Passages[Defs.LEFT]
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else CreateTemplateCell()
+			pc.MapPos=nc.MapPos+Utils.LEFT
+			pc.Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
 			PotentialCells[pc.MapPos]=pc
 	else:
-		nc.Passages[Defs.LEFT]=Cells[nc.MapPos+Defs.LEFT].Passages[Defs.RIGHT]
+		nc.Passages[Utils.LEFT]=Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT]
 			
 	Cells[nc.MapPos]=nc
 	PotentialCells.erase(nc.MapPos)
@@ -154,9 +157,9 @@ func CleanInvalidPassages():
 	for c in Cells.values():
 		print("¿",c.MapPos,c.Passages)
 		for p in c.Passages.keys():
-			if c.Passages[p] not in [Defs.PassageType.NONE]:
+			if c.Passages[p] not in [Utils.PassageType.NONE]:
 				if !Cells.has(c.MapPos+p):
-					c.Passages[p]=Defs.PassageType.NONE
+					c.Passages[p]=Utils.PassageType.NONE
 		print("¡",c.MapPos,c.Passages)
 
 ## Forcefully adds additional room, if the minimum has not been reached
@@ -165,21 +168,21 @@ func EnforceMinimum()->void:
 	tmp.shuffle()
 	var psg=GeneratePassages(Weigths)
 	for i in tmp:
-		if Cells[i].Passages[Defs.UP] == Defs.PassageType.NONE && !Cells.has(i+Defs.UP):
-			psg[Defs.DOWN]=Defs.PassageType.NORMAL
-			AddNewCell(i+Defs.UP,psg)
+		if Cells[i].Passages[Utils.UP] == Utils.PassageType.NONE && !Cells.has(i+Utils.UP):
+			psg[Utils.DOWN]=Utils.PassageType.NORMAL
+			AddNewCell(i+Utils.UP,psg)
 			return
-		elif Cells[i].Passages[Defs.RIGHT] == Defs.PassageType.NONE && !Cells.has(i+Defs.RIGHT):
-			psg[Defs.LEFT]=Defs.PassageType.NORMAL
-			AddNewCell(i+Defs.RIGHT,psg)
+		elif Cells[i].Passages[Utils.RIGHT] == Utils.PassageType.NONE && !Cells.has(i+Utils.RIGHT):
+			psg[Utils.LEFT]=Utils.PassageType.NORMAL
+			AddNewCell(i+Utils.RIGHT,psg)
 			return
-		elif Cells[i].Passages[Defs.DOWN] == Defs.PassageType.NONE && !Cells.has(i+Defs.DOWN):
-			psg[Defs.UP]=Defs.PassageType.NORMAL
-			AddNewCell(i+Defs.DOWN,psg)
+		elif Cells[i].Passages[Utils.DOWN] == Utils.PassageType.NONE && !Cells.has(i+Utils.DOWN):
+			psg[Utils.UP]=Utils.PassageType.NORMAL
+			AddNewCell(i+Utils.DOWN,psg)
 			return 
-		elif Cells[i].Passages[Defs.LEFT] == Defs.PassageType.NONE && !Cells.has(i+Defs.LEFT):
-			psg[Defs.RIGHT]=Defs.PassageType.NORMAL
-			AddNewCell(i+Defs.LEFT,psg)
+		elif Cells[i].Passages[Utils.LEFT] == Utils.PassageType.NONE && !Cells.has(i+Utils.LEFT):
+			psg[Utils.RIGHT]=Utils.PassageType.NORMAL
+			AddNewCell(i+Utils.LEFT,psg)
 			return
 	
 
@@ -198,10 +201,10 @@ func setup(rseed:int)->void:
 ## Generates a CellData instance with default data 
 func CreateTemplateCell()->CellData:
 	var c:=CellData.new()
-	c.Passages={Defs.UP:Defs.PassageType.UNDEFINED,
-			Defs.RIGHT:Defs.PassageType.UNDEFINED,
-			Defs.DOWN:Defs.PassageType.UNDEFINED,
-			Defs.LEFT:Defs.PassageType.UNDEFINED}
+	c.Passages={Utils.UP:Utils.PassageType.UNDEFINED,
+			Utils.RIGHT:Utils.PassageType.UNDEFINED,
+			Utils.DOWN:Utils.PassageType.UNDEFINED,
+			Utils.LEFT:Utils.PassageType.UNDEFINED}
 	c.RoomType=0
 	return c
 
@@ -215,11 +218,14 @@ func GeneratePassages(weigths:Dictionary,cps:Dictionary={})->Dictionary:
 	if !cps.is_empty():
 		psg=cps
 	else:
-		psg={Defs.UP:Defs.PassageType.UNDEFINED,
-			Defs.RIGHT:Defs.PassageType.UNDEFINED,
-			Defs.DOWN:Defs.PassageType.UNDEFINED,
-			Defs.LEFT:Defs.PassageType.UNDEFINED}
+		psg={Utils.UP:Utils.PassageType.UNDEFINED,
+			Utils.RIGHT:Utils.PassageType.UNDEFINED,
+			Utils.DOWN:Utils.PassageType.UNDEFINED,
+			Utils.LEFT:Utils.PassageType.UNDEFINED}
 	for k in psg.keys():
-		if psg[k] == Defs.PassageType.UNDEFINED:
+		if psg[k] == Utils.PassageType.UNDEFINED:
 			psg[k]=pt[rand.randi_range(0,pt.size()-1)]
 	return psg
+
+
+

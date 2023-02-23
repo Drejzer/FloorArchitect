@@ -15,13 +15,13 @@ CellScene = ExtResource("2_c5pt2")
 [node name="FloorArchitect" type="Node" parent="."]
 script = ExtResource("1")
 Weigths = {
-0: 3,
+0: 8,
 1: 1,
 2: 0,
 3: 0,
-4: 1
+4: 0
 }
-minimum_room_count = 8
-maximum_room_count = 20
+minimum_room_count = 11
+maximum_room_count = 17
 
 [connection signal="FloorPlanned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
