@@ -18,7 +18,6 @@ static func _low():
 
 static func GetDistanceMatrix(map:Dictionary)->Dictionary:
 	var pthdict:={}
-	
 	return pthdict
 
 static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:

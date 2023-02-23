@@ -17,11 +17,11 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Utils="*res://addons/Floorgen/Utils.gd"
+Utils="*res://addons/FloorArchitect/Utils.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Floorgen/plugin.cfg")
+enabled=PackedStringArray("res://addons/FloorArchitect/plugin.cfg")
 
 [gui]
 
