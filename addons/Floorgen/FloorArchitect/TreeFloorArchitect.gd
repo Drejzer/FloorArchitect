@@ -6,17 +6,10 @@ class_name TreeFloorArchitect
 # var a: int = 2
 # var b: String = "text"
 
-var PotentialCellKeys:=[]
+var Visited:=[]
 
-func plan_floor()->void:
-	.plan_floor()
-	pass
-
-func DepthFirst_cell_addition()->void:
-	pass
-
-func BreadthFirst_cell_addition()->void:
-	pass
+func GetNextCell()->CellData:
+	return CreateTemplateCell()
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

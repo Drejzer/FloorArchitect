@@ -1,0 +1,119 @@
+[gd_scene load_steps=9 format=3 uid="uid://crw1xqhqj0g50"]
+
+[ext_resource type="Script" path="res://Cell/Cell.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b0y4506sjblhl" path="res://icon.png" id="2"]
+
+[sub_resource type="Gradient" id="3"]
+offsets = PackedFloat32Array(0, 0.490798, 0.993865)
+colors = PackedColorArray(0.72549, 0.737255, 0.760784, 1, 0.72549, 0.737255, 0.760784, 1, 0.72549, 0.737255, 0.760784, 1)
+
+[sub_resource type="GradientTexture2D" id="4"]
+gradient = SubResource("3")
+height = 3
+
+[sub_resource type="Gradient" id="5"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.251397, 0.49162, 0.75419, 1)
+colors = PackedColorArray(0.72549, 0.737255, 0.760784, 1, 0.865865, 0.360249, 0.371747, 0.675134, 1, 0, 0, 0.364706, 0.85822, 0.38078, 0.392933, 0.692825, 0.72549, 0.737255, 0.760784, 1)
+
+[sub_resource type="GradientTexture2D" id="6"]
+gradient = SubResource("5")
+height = 3
+
+[sub_resource type="Gradient" id="7"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.120419, 0.50838, 0.890052, 1)
+colors = PackedColorArray(0.72549, 0.737255, 0.760784, 1, 0.514113, 0.52006, 0.531954, 1, 0.298039, 0.298039, 0.298039, 0, 0.521479, 0.527629, 0.539929, 1, 0.72549, 0.737255, 0.760784, 1)
+
+[sub_resource type="GradientTexture2D" id="8"]
+gradient = SubResource("7")
+height = 3
+
+[node name="Cell" type="Node2D"]
+script = ExtResource("1")
+
+[node name="CellImage" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0, 0, 0, 1)
+texture = ExtResource("2")
+
+[node name="ContentImage" type="Sprite2D" parent="."]
+
+[node name="Passages" type="Node2D" parent="."]
+
+[node name="PN" type="Node2D" parent="Passages"]
+position = Vector2(0, -32.5)
+
+[node name="Sprite" type="Sprite2D" parent="Passages/PN"]
+visible = false
+position = Vector2(0, 2)
+texture = SubResource("4")
+
+[node name="Sprite2" type="Sprite2D" parent="Passages/PN"]
+position = Vector2(0, 2)
+texture = SubResource("6")
+
+[node name="Sprite3" type="Sprite2D" parent="Passages/PN"]
+visible = false
+position = Vector2(0, 2)
+texture = SubResource("8")
+
+[node name="PE" type="Node2D" parent="Passages"]
+position = Vector2(32.5, 0)
+
+[node name="Sprite" type="Sprite2D" parent="Passages/PE"]
+visible = false
+position = Vector2(-2, 0)
+rotation = 1.5708
+texture = SubResource("4")
+
+[node name="Sprite2" type="Sprite2D" parent="Passages/PE"]
+position = Vector2(-2, 0)
+rotation = 1.5708
+texture = SubResource("6")
+
+[node name="Sprite3" type="Sprite2D" parent="Passages/PE"]
+visible = false
+position = Vector2(-2, 0)
+rotation = 1.5708
+texture = SubResource("8")
+
+[node name="PS" type="Node2D" parent="Passages"]
+position = Vector2(0, 32.5)
+
+[node name="Sprite" type="Sprite2D" parent="Passages/PS"]
+visible = false
+position = Vector2(0, -2)
+rotation = -3.14159
+texture = SubResource("4")
+
+[node name="Sprite2" type="Sprite2D" parent="Passages/PS"]
+position = Vector2(0, -2)
+rotation = -3.14159
+texture = SubResource("6")
+
+[node name="Sprite3" type="Sprite2D" parent="Passages/PS"]
+visible = false
+position = Vector2(0, -2)
+rotation = -3.14159
+texture = SubResource("8")
+
+[node name="PW" type="Node2D" parent="Passages"]
+position = Vector2(-32.5, 0)
+
+[node name="Sprite" type="Sprite2D" parent="Passages/PW"]
+visible = false
+position = Vector2(2, 0)
+rotation = -1.5708
+texture = SubResource("4")
+
+[node name="Sprite2" type="Sprite2D" parent="Passages/PW"]
+position = Vector2(2, 0)
+rotation = -1.5708
+texture = SubResource("6")
+
+[node name="Sprite3" type="Sprite2D" parent="Passages/PW"]
+visible = false
+position = Vector2(2, 0)
+rotation = -1.5708
+texture = SubResource("8")
