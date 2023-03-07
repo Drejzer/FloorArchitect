@@ -15,10 +15,6 @@ run/main_scene="res://Demo.tscn"
 config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
 
-[autoload]
-
-Utils="*res://addons/FloorArchitect/Utils.gd"
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/FloorArchitect/plugin.cfg")
