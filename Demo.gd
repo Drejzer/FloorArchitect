@@ -21,7 +21,9 @@ func _process(_delta: float) -> void:
 		if!gen:
 			gen=true
 			genmap()
-			Utils.GetBridgesAndArticulationPoints($FloorArchitect.Cells)
+			var t:=Utils.GetBridgesAndArticulationPoints($FloorArchitect.Cells)
+			print(t.Bridges)
+			print(t.ArticulationPoints)
 	cdir.y=-1 if Input.is_action_pressed("ui_up") else (1 if Input.is_action_pressed("ui_down") else 0)
 	cdir.x=-1 if Input.is_action_pressed("ui_left") else (1 if Input.is_action_pressed("ui_right") else 0)
 	cdir=cdir.normalized()*_delta*1000

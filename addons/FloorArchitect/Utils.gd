@@ -10,9 +10,13 @@ enum PassageType {
 				CONNECTION=3,
 				LOCKED=4
 				}
+## Vector pointing UP, used to identify exits from a cell
 const UP=Vector2i(0,-1)
+## Vector pointing RIGHT, used to identify exits from a cell
 const RIGHT=Vector2i(1,0)
+## Vector pointing DOWN, used to identify exits from a cell
 const DOWN=Vector2i(0,1)
+## Vector pointing LEFTt, used to identify exits from a cell
 const LEFT=Vector2i(-1,0)
 
 ## Generates and returns a dictionary of shortest paths between each cell.
@@ -24,36 +28,45 @@ static func GetDistances(map:Dictionary)->Dictionary:
 
 ## Finds all bridges and articulation points (cut vertices) of the provided map.
 static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:
-	var dfsd={}
-	var parents={}
-	for x in map.keys():
-		dfsd[x]=-1;
-		parents[x]=-1
-	var current=map.keys()[0]
-	dfsd[current]=0
-	parents[current]=null
+	var bapdict:={"Bridges":{},"ArticulationPoints":{}}
+	var time:=[0]
+	var dfso:={}
+	var parents:={}
+	var low:={}
+	var visited:={}
 	
-	var traverse =func (y,f):
-		print(y)
-		var b=true
+	for x in map.keys():
+		dfso[x]=-1
+		parents[x]=null
+		low[x]=-1
+		visited[x]=false
+	
+	var traverse:=func (y,f)->void:
+		time[0]+=1
+		visited[y]=true
+		dfso[y]=time[0]
+		low[y]=time[0]
+		var cc:=0
 		for d in map[y].Passages:
-			if (map[y].Passages[d] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]) and dfsd[y+d]==-1:
-				dfsd[y+d]=dfsd[y]+1
-				parents[y+d]=y
-				current=y+d
-				b=false
-				break
-		if b:
-			current=parents[y]
-		if current!=null:
-			f.call(current,f)
-		
-		
-	var bapdict:={Bridges={},ArticulationPoints={}}
-	var low = func (x):
-		print(x)
-	#low.call(map)
-	traverse.call(Vector2i(0,0),traverse);
-	print(parents)
-	print(dfsd)
+			if (map[y].Passages[d] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]):
+				if parents[y]==y+d:
+					continue
+				if visited[y+d]:
+					low[y]=min(low[y],dfso[y+d])
+				else:
+					cc+=1
+					parents[y+d]=y
+					f.call(y+d,f)
+					low[y]=min(low[y],low[y+d])
+					if low[y+d]==dfso[y+d]:
+						bapdict.Bridges[[y,y+d]]=true
+					if low[y+d]>=dfso[y] and parents[y]!=null:
+						bapdict.ArticulationPoints[y]=true
+		if parents[y]==null:
+			if cc>1:
+				bapdict.ArticulationPoints[y]=true
+		pass
+	
+	parents[map.keys()[0]]=null
+	traverse.call(map.keys()[0],traverse);
 	return bapdict
