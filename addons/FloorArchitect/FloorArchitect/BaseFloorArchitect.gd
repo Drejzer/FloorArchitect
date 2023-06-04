@@ -35,9 +35,7 @@ func plan_floor()->void:
 			EnforceMinimum()
 			if Cells.size()>=minimum_room_count:
 				break
-		await get_tree().process_frame
 	CleanInvalidPassages()
-	print("planned")
 	FloorPlanned.emit()
 
 ## Picks next cell to be added from [member PotentialCells]
@@ -155,12 +153,10 @@ func RealizeCell(nc:CellData):
 ## Eliminates "open" passages to nonexisting cells
 func CleanInvalidPassages():
 	for c in Cells.values():
-		print("¿",c.MapPos,c.Passages)
 		for p in c.Passages.keys():
 			if c.Passages[p] not in [Utils.PassageType.NONE]:
 				if !Cells.has(c.MapPos+p):
 					c.Passages[p]=Utils.PassageType.NONE
-		print("¡",c.MapPos,c.Passages)
 
 ## Forcefully adds additional room, if the minimum has not been reached
 func EnforceMinimum()->void:
