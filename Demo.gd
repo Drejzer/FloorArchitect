@@ -8,6 +8,8 @@ extends Node2D
 
 var gen=false
 
+var briges_and_aps:={}
+
 func _ready() -> void:
 	#randomize()
 	$FloorArchitect.setup(1337)
@@ -21,9 +23,13 @@ func _process(_delta: float) -> void:
 		if!gen:
 			gen=true
 			genmap()
-			var t:=Utils.GetBridgesAndArticulationPoints($FloorArchitect.Cells)
-			print(t.Bridges)
-			print(t.ArticulationPoints)
+	elif Input.is_action_just_released("display_AP"):
+		if gen:
+			gen=false
+			briges_and_aps=Utils.GetBridgesAndArticulationPoints($FloorArchitect.Cells)
+			for c in $map.get_children():
+				if c.has_method("set_Content_visibility"):
+					c.set_Content_visibility(c.Data.MapPos in briges_and_aps["ArticulationPoints"])
 	cdir.y=-1 if Input.is_action_pressed("ui_up") else (1 if Input.is_action_pressed("ui_down") else 0)
 	cdir.x=-1 if Input.is_action_pressed("ui_left") else (1 if Input.is_action_pressed("ui_right") else 0)
 	cdir=cdir.normalized()*_delta*1000
@@ -38,7 +44,6 @@ func genmap():
 	$FloorArchitect.Cells.clear()
 	$FloorArchitect.PotentialCells.clear()
 	$FloorArchitect.plan_floor()
-	gen=false
 	
 
 func _on_BaseFloorArchitect_FloorPlanned() -> void:

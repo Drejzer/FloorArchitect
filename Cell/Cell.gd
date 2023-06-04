@@ -20,7 +20,7 @@ func _ready() -> void:
 	configure_walls()
 	pass # Replace with function body.
 
-## Sets up the display of 
+## Sets up the display of the cell's walls
 func configure_walls()->void:
 	match(Data.Passages[Utils.UP]):
 		Utils.PassageType.NONE,Utils.PassageType.HIDDEN:
@@ -113,4 +113,8 @@ func configure_walls()->void:
 			$Passages/PW/Sprite.visible=true
 			$Passages/PW/Sprite2.visible=false
 			$Passages/PW/Sprite3.visible=false
+	pass
+
+func set_Content_visibility(isap:bool)->void:
+	$ContentImage.visible=isap;
 	pass
