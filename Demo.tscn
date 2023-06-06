@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Demo.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://crw1xqhqj0g50" path="res://Cell/Cell.tscn" id="2_c5pt2"]
-[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/BaseFloorArchitect.gd" id="3_5x8er"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/BaseFloorArchitect.gd" id="3_jgds1"]
 
 [node name="Test" type="Node2D"]
 script = ExtResource("2")
@@ -13,14 +13,8 @@ CellScene = ExtResource("2_c5pt2")
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("3_5x8er")
-Weigths = {
-0: 5,
-1: 3,
-2: 0,
-3: 0,
-4: 1
-}
-maximum_room_count = 200
+script = ExtResource("3_jgds1")
+minimum_room_count = 16
+maximum_room_count = 27
 
 [connection signal="FloorPlanned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]

@@ -1,3 +1,5 @@
+## Class declaring static funcions, enums and constants used in the FloorArchitect plugin
+
 extends Node
 class_name Utils
 
@@ -19,14 +21,44 @@ const DOWN=Vector2i(0,1)
 ## Vector pointing LEFTt, used to identify exits from a cell
 const LEFT=Vector2i(-1,0)
 
-## Generates and returns a dictionary of shortest paths between each cell.
-static func GetDistances(map:Dictionary)->Dictionary:
-	var pthdict:={}
-	#TODO
-	return pthdict
+## Generates and returns a dictionary of shortest paths between each cell.[br]
+## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys[br]
+## Returns a dictionary with two dictionaries adressed by "DistanceMatrix" and "PathMatrix" respectively.
+static func GetShortestPathsAndDistances(map:Dictionary)->Dictionary:
+	const inf=9999999999999999 #nothing should be that big and it still is far from an overflow
+	var pths:={}
+	var dist:={}
+	for from in map.keys():
+		pths[from]={}
+		dist[from]={}
+		for to in map.keys():
+			if to==from:
+				dist[from][to]=0
+				pths[from][to]=null
+			for p in map[from].Passages:
+				if from+p==to && map[from].Passages[p] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+					pths[from][to]=to
+					dist[from][to]=1
+				else:
+					pths[from][to]=null
+					dist[from][to]=inf
+		pass
+	for through in map.keys():
+		for from in map.keys():
+			for to in map.keys():
+				if pths[from][through]!=null and pths[through][to]!=null:
+					if dist[from][through]+dist[through][to]<dist[from][to]:
+						dist[from][to]=dist[from][through]+dist[through][to]
+						pths[from][to]=through
+			
+	return {"PathMatrix":pths,"DistanceMatrix":dist}
 
 
-## Finds all bridges and articulation points (cut vertices) of the provided map.
+## Finds all bridges and articulation points (cut vertices) of the provided map.[br]
+## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys.
+##
+## Returns a dictionary consisting of a pair of dictionaries one adressed "Bridges" and the other adressed "ArticulationPoints"
+## 
 static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:
 	var bapdict:={"Bridges":{},"ArticulationPoints":{}}
 	var time:=[0]
@@ -59,7 +91,7 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:
 					f.call(y+d,f)
 					low[y]=min(low[y],low[y+d])
 					if low[y+d]==dfso[y+d]:
-						bapdict.Bridges[[y,y+d]]=true
+						bapdict.Bridges[[y,y+d]]=[y+d,y]
 					if low[y+d]>=dfso[y] and parents[y]!=null:
 						bapdict.ArticulationPoints[y]=true
 		if parents[y]==null:

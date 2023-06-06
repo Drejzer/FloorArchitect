@@ -13,6 +13,7 @@ var briges_and_aps:={}
 func _ready() -> void:
 	#randomize()
 	$FloorArchitect.setup(1337)
+	genmap()
 	
 			
 # Called when the node enters the scene tree for the first time.
@@ -20,12 +21,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var cdir=Vector2(0,0)
 	if Input.is_action_just_released("test"):
-		if!gen:
-			gen=true
 			genmap()
 	elif Input.is_action_just_released("display_AP"):
 		if gen:
-			gen=false
 			briges_and_aps=Utils.GetBridgesAndArticulationPoints($FloorArchitect.Cells)
 			for c in $map.get_children():
 				if c.has_method("set_Content_visibility"):
@@ -37,6 +35,7 @@ func _process(_delta: float) -> void:
 
 
 func genmap():
+	gen=false
 	$map.free()
 	var m=Node2D.new()
 	m.name="map"
@@ -44,6 +43,7 @@ func genmap():
 	$FloorArchitect.Cells.clear()
 	$FloorArchitect.PotentialCells.clear()
 	$FloorArchitect.plan_floor()
+	gen=true
 	
 
 func _on_BaseFloorArchitect_FloorPlanned() -> void:
@@ -53,6 +53,7 @@ func _on_BaseFloorArchitect_FloorPlanned() -> void:
 			x.Size_x=64
 			x.Size_y=64
 			x.setup($FloorArchitect.Cells[i])
+			await get_tree().process_frameope
 			$map.add_child(x,true)
 			await get_tree().process_frame
 	pass

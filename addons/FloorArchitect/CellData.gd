@@ -6,7 +6,8 @@ extends RefCounted
 
 class_name CellData
 
-## Determines which sides of the cell have which type of wall (or no wall at all) used as a collection of flags
+## Determines which sides of the cell have which type of wall (or no wall at all).[br]
+## Holds pairs DIRECTION:[enum Utils.PassageType]
 var Passages={}
 ## Type of predefined room (those can consist of multiple cells) 
 var RoomType:int=0

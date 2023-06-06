@@ -8,11 +8,11 @@ var rand:=RandomNumberGenerator.new()
 
 signal FloorPlanned
 
-@export var Weigths:={Utils.PassageType.NONE:3
-			,Utils.PassageType.NORMAL:5
-			,Utils.PassageType.HIDDEN:0
-			,Utils.PassageType.LOCKED:0
-			,Utils.PassageType.CONNECTION:0}
+@export var Weigths:={"NONE":3
+			,"NORMAL":5
+			,"HIDDEN":0
+			,"LOCKED":0
+			,"CONNECTION":0}
 			
 @export var minimum_room_count:int=6
 @export var maximum_room_count:int=9
@@ -26,7 +26,6 @@ var PotentialCells:Dictionary={}
 func plan_floor()->void:
 	var init = CreateTemplateCell()
 	PotentialCells[init.MapPos]=init
-	
 	while Cells.size() < maximum_room_count && !PotentialCells.is_empty():
 		if !PotentialCells.is_empty():
 			var nextc=GetNextCell()
@@ -209,7 +208,7 @@ func GeneratePassages(weigths:Dictionary,cps:Dictionary={})->Dictionary:
 	var pt=[]
 	for k in weigths.keys():
 		for i in range(weigths[k]):
-			pt.push_back(k)
+			pt.push_back(Utils.PassageType.get(k))
 	var psg
 	if !cps.is_empty():
 		psg=cps

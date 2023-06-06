@@ -19,6 +19,10 @@ config/icon="res://icon.png"
 
 enabled=PackedStringArray("res://addons/FloorArchitect/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
