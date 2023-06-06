@@ -35,22 +35,23 @@ static func GetShortestPathsAndDistances(map:Dictionary)->Dictionary:
 			if to==from:
 				dist[from][to]=0
 				pths[from][to]=null
-			for p in map[from].Passages:
-				if from+p==to && map[from].Passages[p] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-					pths[from][to]=to
-					dist[from][to]=1
-				else:
-					pths[from][to]=null
-					dist[from][to]=inf
+			elif to-from not in map[to].Passages.keys():
+				pths[from][to]=null
+				dist[from][to]=inf
+			elif map[from].Passages[to-from] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+				pths[from][to]=to
+				dist[from][to]=1
+			else:
+				pths[from][to]=null
+				dist[from][to]=inf
 		pass
 	for through in map.keys():
 		for from in map.keys():
 			for to in map.keys():
-				if pths[from][through]!=null and pths[through][to]!=null:
+				if dist[from][through]<inf and dist[through][to]<inf:
 					if dist[from][through]+dist[through][to]<dist[from][to]:
 						dist[from][to]=dist[from][through]+dist[through][to]
 						pths[from][to]=through
-			
 	return {"PathMatrix":pths,"DistanceMatrix":dist}
 
 

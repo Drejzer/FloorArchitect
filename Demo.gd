@@ -9,6 +9,7 @@ extends Node2D
 var gen=false
 
 var briges_and_aps:={}
+var dists:={}
 
 func _ready() -> void:
 	#randomize()
@@ -28,6 +29,11 @@ func _process(_delta: float) -> void:
 			for c in $map.get_children():
 				if c.has_method("set_Content_visibility"):
 					c.set_Content_visibility(c.Data.MapPos in briges_and_aps["ArticulationPoints"])
+			dists=Utils.GetShortestPathsAndDistances($FloorArchitect.Cells)
+			for from in dists["DistanceMatrix"].keys():
+				for to in dists["DistanceMatrix"][from]:
+					print(from,to,dists["DistanceMatrix"][from][to])
+				
 	cdir.y=-1 if Input.is_action_pressed("ui_up") else (1 if Input.is_action_pressed("ui_down") else 0)
 	cdir.x=-1 if Input.is_action_pressed("ui_left") else (1 if Input.is_action_pressed("ui_right") else 0)
 	cdir=cdir.normalized()*_delta*1000
@@ -53,7 +59,7 @@ func _on_BaseFloorArchitect_FloorPlanned() -> void:
 			x.Size_x=64
 			x.Size_y=64
 			x.setup($FloorArchitect.Cells[i])
-			await get_tree().process_frameope
+			await get_tree().process_frame
 			$map.add_child(x,true)
 			await get_tree().process_frame
 	pass

@@ -14,7 +14,7 @@ CellScene = ExtResource("2_c5pt2")
 
 [node name="FloorArchitect" type="Node" parent="."]
 script = ExtResource("3_jgds1")
-minimum_room_count = 16
-maximum_room_count = 27
+minimum_room_count = 9
+maximum_room_count = 17
 
 [connection signal="FloorPlanned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
