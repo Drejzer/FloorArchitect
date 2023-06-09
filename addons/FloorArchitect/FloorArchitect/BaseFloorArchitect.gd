@@ -1,7 +1,6 @@
-## Node for generating Dungeon floor layouts, randomly selects nex cell to be added
+## Node for generating Dungeon floor layouts
 ##
-## This node generates the general layout of rooms. It does not 
-
+## This node generates the general layout of rooms. 
 class_name BaseFloorArchitect extends Node
 
 var rand:=RandomNumberGenerator.new()
@@ -23,7 +22,7 @@ signal FloorPlanned
 var PotentialCells:Dictionary={}
 
 ## Function that generates the floor layout
-func plan_floor()->void:
+func PlanFloor()->void:
 	var init = CreateTemplateCell()
 	PotentialCells[init.MapPos]=init
 	while Cells.size() < maximum_room_count && !PotentialCells.is_empty():
@@ -187,7 +186,7 @@ func _ready() -> void:
 	pass
 	
 ## Sets up the class. Allows for setting the seed of [member rand]
-func setup(rseed:int)->void:
+func setup(rseed:int=1337)->void:
 	rand.seed=rseed
 	PotentialCells.clear()
 	Cells.clear()

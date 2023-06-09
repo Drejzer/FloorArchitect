@@ -15,10 +15,7 @@ func _ready() -> void:
 	#randomize()
 	$FloorArchitect.setup(1337)
 	genmap()
-	
 			
-# Called when the node enters the scene tree for the first time.
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	var cdir=Vector2(0,0)
 	if Input.is_action_just_released("test"):
@@ -48,7 +45,7 @@ func genmap():
 	add_child(m,true)
 	$FloorArchitect.Cells.clear()
 	$FloorArchitect.PotentialCells.clear()
-	$FloorArchitect.plan_floor()
+	$FloorArchitect.PlanFloor()
 	gen=true
 	
 
