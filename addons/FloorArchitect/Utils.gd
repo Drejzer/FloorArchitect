@@ -21,6 +21,17 @@ const DOWN=Vector2i(0,1)
 ## Vector pointing LEFTt, used to identify exits from a cell
 const LEFT=Vector2i(-1,0)
 
+static func GetLeaves(map:Dictionary)->Dictionary:
+	var leaves:={}
+	for r in map.keys():
+		var c=0
+		for p in map[r].Passages:
+			if(map[r].Passages[p] not in [Utils.PassageType.UNDEFINED,Utils.PassageType.NONE]):
+				c+=1
+		if c==1:
+			leaves[r]=true
+	return leaves
+
 ## Generates and returns a dictionary of shortest paths between each cell.[br]
 ## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys[br]
 ## Returns a dictionary with two dictionaries adressed by "DistanceMatrix" and "PathMatrix" respectively.

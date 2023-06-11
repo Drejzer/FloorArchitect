@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://sqm00s0keroh"]
+[gd_scene load_steps=4 format=3 uid="uid://bpmrfjkjk355r"]
 
 [ext_resource type="Script" path="res://Demo.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://crw1xqhqj0g50" path="res://Cell/Cell.tscn" id="2_c5pt2"]
-[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/BaseFloorArchitect.gd" id="3_jgds1"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomGrowerFloorArchitect.gd" id="3_8wwn2"]
 
 [node name="Test" type="Node2D"]
 script = ExtResource("2")
@@ -13,8 +13,6 @@ CellScene = ExtResource("2_c5pt2")
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("3_jgds1")
-minimum_room_count = 9
-maximum_room_count = 17
+script = ExtResource("3_8wwn2")
 
 [connection signal="FloorPlanned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]

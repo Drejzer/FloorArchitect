@@ -27,9 +27,6 @@ func _process(_delta: float) -> void:
 				if c.has_method("set_Content_visibility"):
 					c.set_Content_visibility(c.Data.MapPos in briges_and_aps["ArticulationPoints"])
 			dists=Utils.GetShortestPathsAndDistances($FloorArchitect.Cells)
-			for from in dists["DistanceMatrix"].keys():
-				for to in dists["DistanceMatrix"][from]:
-					print(from,to,dists["DistanceMatrix"][from][to])
 				
 	cdir.y=-1 if Input.is_action_pressed("ui_up") else (1 if Input.is_action_pressed("ui_down") else 0)
 	cdir.x=-1 if Input.is_action_pressed("ui_left") else (1 if Input.is_action_pressed("ui_right") else 0)
