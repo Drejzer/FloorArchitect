@@ -28,7 +28,7 @@ func PlanFloor()->void:
 
 ## Adds a new [class CellData] in the specified position with the specified passages.
 ##
-## Creates and adds a new [class CellData] to the [member Cells], will overwrite PassageType.NONE of existing cells.
+## Creates and adds a new [class CellData] to the [member Cells], will overwrite PassageType.NONE and PassageType.UNDEFINED of existing cells.
 func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
 	var nc:=CreateTemplateCell()
 	nc.MapPos=pos

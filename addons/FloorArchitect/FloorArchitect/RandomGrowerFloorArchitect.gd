@@ -1,6 +1,6 @@
 ## Node for generating Dungeon floor layouts
 ##
-## This node generates the general layout of rooms. 
+## This node generates the general layout of rooms. The algorithm is based on Binding of Isaac 
 class_name RandomGrowerFloorArchitect extends BaseFloorArchitect
 
 @export var minimum_room_count:int=9
@@ -18,8 +18,7 @@ func PlanFloor()->void:
 			EnforceMinimum()
 			if Cells.size()>=minimum_room_count:
 				break
-	CleanInvalidPassages()
-	FloorPlanned.emit()
+	super()
 
 ## Picks next cell to be added from [member PotentialCells]
 func GetNextCell()->CellData:
@@ -79,8 +78,10 @@ func RealizeCell(nc:CellData):
 
 ## Forcefully adds additional room, if the minimum has not been reached
 func EnforceMinimum()->void:
-	var tmp:=Cells.keys()
-	tmp.shuffle()
+	var tmp2:=Cells.keys()
+	var tmp:=[]
+	while tmp2.size():
+		tmp.push_back(tmp2.pop_at(rand.randi()%tmp2.size()))
 	var psg=DefinePassages(Weigths)
 	for i in tmp:
 		if Cells[i].Passages[Utils.UP] == Utils.PassageType.NONE && !Cells.has(i+Utils.UP):
