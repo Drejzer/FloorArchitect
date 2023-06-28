@@ -1,12 +1,11 @@
-## Node for generating Dungeon floor layouts
+## Base Node for generating Dungeon floor layouts. Holds declarations of common variables and methods
 ##
-## This node generates the general layout of rooms. 
+## This class acts as an abstract class, it doesn't provide any method definitions, for particular algorithm implementations look at classes derived from it.
 class_name BaseFloorArchitect extends Node
 
 var rand:=RandomNumberGenerator.new()
 
 signal FloorPlanned
-
 @export var Weigths:={"NONE":3
 			,"NORMAL":5
 			,"HIDDEN":0
@@ -30,12 +29,12 @@ func PlanFloor()->void:
 ##
 ## Creates and adds a new [class CellData] to the [member Cells], will overwrite PassageType.NONE and PassageType.UNDEFINED of existing cells.
 func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
-	var nc:=CreateTemplateCell()
+	var nc:=Utils.CreateTemplateCell()
 	nc.MapPos=pos
 	nc.Passages=passages
 	if !Cells.has(nc.MapPos+Utils.UP):
 		if add_potential && passages[Utils.UP] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else CreateTemplateCell()
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else Utils.CreateTemplateCell()
 			pc.Passages[Utils.DOWN]=nc.Passages[Utils.UP]
 			pc.MapPos=nc.MapPos+Utils.UP
 			PotentialCells[pc.MapPos]=pc
@@ -47,7 +46,7 @@ func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
 		
 	if !Cells.has(nc.MapPos+Utils.RIGHT):
 		if add_potential && passages[Utils.RIGHT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=(PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else CreateTemplateCell())
+			var pc:CellData=(PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else Utils.CreateTemplateCell())
 			pc.Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
 			pc.MapPos=nc.MapPos+Utils.RIGHT
 			PotentialCells[pc.MapPos]=pc
@@ -59,7 +58,7 @@ func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
 		
 	if !Cells.has(nc.MapPos+Utils.DOWN):
 		if add_potential && passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else CreateTemplateCell()
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else Utils.CreateTemplateCell()
 			pc.MapPos=nc.MapPos+Utils.DOWN
 			pc.Passages[Utils.UP]=nc.Passages[Utils.DOWN]
 			PotentialCells[pc.MapPos]=pc
@@ -71,7 +70,7 @@ func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
 		
 	if !Cells.has(nc.MapPos+Utils.LEFT):
 		if add_potential && passages[Utils.LEFT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else CreateTemplateCell()
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else Utils.CreateTemplateCell()
 			pc.Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
 			pc.MapPos=nc.MapPos+Utils.LEFT
 			PotentialCells[pc.MapPos]=pc
@@ -104,15 +103,6 @@ func setup(rseed:int=1337)->void:
 	Cells.clear()
 	pass
 
-## Generates a CellData instance at position (0,0) with 4 UNDEFINED passages
-func CreateTemplateCell()->CellData:
-	var c:=CellData.new()
-	c.Passages={Utils.UP:Utils.PassageType.UNDEFINED,
-			Utils.RIGHT:Utils.PassageType.UNDEFINED,
-			Utils.DOWN:Utils.PassageType.UNDEFINED,
-			Utils.LEFT:Utils.PassageType.UNDEFINED}
-	c.RoomType=0
-	return c
 
 ## Generates passages for a cell by replacing the UNDEFINED values by value randomly selected based on [member Weigths]
 func DefinePassages(weigths:Dictionary,cps:Dictionary={})->Dictionary:

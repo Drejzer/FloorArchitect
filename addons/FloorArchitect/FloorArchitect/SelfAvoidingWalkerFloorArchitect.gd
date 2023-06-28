@@ -1,6 +1,7 @@
 ## Node for generating Dungeon floor layouts with self-avoiding random walk
 ##
 ## This node generates the general layout of rooms, using self-avoiding random walk.
+
 class_name SelfAvoidingWalkerFloorArchitect extends BaseFloorArchitect
 
 @export var main_path_length:int=9
@@ -16,6 +17,8 @@ var path:=[]
 			Vector2i(-1,0):4}
 ## Function that generates the floor layout
 func PlanFloor()->void:
+	Cells.clear()
+	PotentialCells.clear()
 	Walk()
 	RealizePath()
 	MakeSideRooms()
@@ -43,12 +46,12 @@ func Walk()->void:
 
 
 func RealizePath()->void:
-	var current=CreateTemplateCell()
+	var current=Utils.CreateTemplateCell()
 	current.MapPos=path.pop_front()
 	AddNewCell(current.MapPos,current.Passages,false)
 	while path.size()>0:
 		var prev=current.MapPos
-		current=CreateTemplateCell()
+		current=Utils.CreateTemplateCell()
 		current.MapPos=path.pop_front()
 		current.Passages[prev-current.MapPos]=Utils.PassageType.NORMAL
 		AddNewCell(current.MapPos,current.Passages,false)
@@ -64,7 +67,7 @@ func MakeSideRooms()->void:
 		var pos=Cells.keys()[r]
 		for p in dirs:
 			if pos+p not in Cells.keys():
-				var nc=CreateTemplateCell()
+				var nc=Utils.CreateTemplateCell()
 				nc.MapPos=pos+p
 				nc.Passages[-p]=Utils.PassageType.NORMAL
 				AddNewCell(nc.MapPos,nc.Passages,false)

@@ -40,8 +40,6 @@ func genmap():
 	var m=Node2D.new()
 	m.name="map"
 	add_child(m,true)
-	$FloorArchitect.Cells.clear()
-	$FloorArchitect.PotentialCells.clear()
 	$FloorArchitect.PlanFloor()
 	gen=true
 	

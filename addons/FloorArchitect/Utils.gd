@@ -114,3 +114,21 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:
 	parents[map.keys()[0]]=null
 	traverse.call(map.keys()[0],traverse);
 	return bapdict
+
+## Generates a CellData instance at position (0,0) with 4 UNDEFINED passages
+static func CreateTemplateCell()->CellData:
+	var c:=CellData.new()
+	c.Passages={Utils.UP:Utils.PassageType.UNDEFINED,
+			Utils.RIGHT:Utils.PassageType.UNDEFINED,
+			Utils.DOWN:Utils.PassageType.UNDEFINED,
+			Utils.LEFT:Utils.PassageType.UNDEFINED}
+	c.RoomType=0
+	return c
+
+
+static func DuplicateCell(cd:CellData)->CellData:
+	var nc:=CellData.new()
+	nc.MapPos=cd.MapPos
+	nc.RoomType=cd.RoomType
+	nc.Passages=cd.Passages.duplicate(true)
+	return nc
