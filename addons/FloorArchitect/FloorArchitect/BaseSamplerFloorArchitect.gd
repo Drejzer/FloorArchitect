@@ -38,7 +38,7 @@ func SampleFloor()->void:
 			print("Sampled Full Maze")
 			break
 		var pos=(nextcells.pop_front() if SamplingMode == "Wide" else (nextcells.pop_back() if SamplingMode=="Deep" else nextcells.pop_at(rand.randi()%nextcells.size())))
-		Cells[pos-InitPos]=Utils.DuplicateCell(PotentialCells[pos])
+		Cells[pos-InitPos]=PotentialCells[pos].duplicate()
 		Cells[pos-InitPos].MapPos-=InitPos
 		for p in Cells[pos-InitPos].Passages.keys():
 			if !Cells.has(pos-InitPos+p) \
@@ -49,11 +49,24 @@ func SampleFloor()->void:
 	pass
 
 ## Geerates the maze that will be used to sample floor layouts.
-## Should be 
+## Should be implemented in derived classes
 func GenerateMaze()->void:
-	for x in range(MazeWidth):
-		for y in range(MazeHeight):
-			PotentialCells[Vector2i(x,y)]=Utils.CreateTemplateCell()
+	pass
+
+func BraidMaze()->void:
+	var ends=Utils.GetLeaves(PotentialCells).keys().duplicate()
+	var total=ends.size()*1.0
+	while ends.size()/total>1-BraidTreshold:
+		print("braiding")
+		var i=rand.randi_range(0,ends.size()-1)
+		var x=ends.pop_at(i)
+		for p in PotentialCells[x].Passages.keys():
+			if PotentialCells.has(x+p) && PotentialCells[x].Passages[p]==Utils.PassageType.NONE:
+				PotentialCells[x].Passages[p]=Utils.PassageType.NORMAL
+				PotentialCells[x+p].Passages[-p]=Utils.PassageType.NORMAL
+				if ends.has(x+p):
+					ends.pop_at(ends.find(x+p))
+				break
 		
 		
 
@@ -61,4 +74,5 @@ func GenerateMaze()->void:
 func setup(rseed:int=1337)->void:
 	super(rseed)
 	GenerateMaze()
+	BraidMaze()
 	pass

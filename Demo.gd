@@ -47,7 +47,5 @@ func _on_BaseFloorArchitect_FloorPlanned() -> void:
 			x.Size_x=64
 			x.Size_y=64
 			x.setup($FloorArchitect.Cells[i])
-			await get_tree().process_frame
 			$map.add_child(x,true)
-			await get_tree().process_frame
 	pass

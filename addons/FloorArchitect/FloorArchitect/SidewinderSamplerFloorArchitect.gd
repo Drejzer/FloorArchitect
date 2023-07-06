@@ -1,7 +1,7 @@
 ## Floor architect that first generates a maze using Sidewinder Algorithm and then samples a subset of rooms from it multiple times
 ##
 
-class_name SidewinderFloorArchitect extends BaseSamplerFloorArchitect
+class_name SidewinderSamplerFloorArchitect extends BaseSamplerFloorArchitect
 
 ## Geerates the maze that will be used to sample floor layouts.
 func GenerateMaze()->void:
@@ -20,12 +20,12 @@ func GenerateMaze()->void:
 				nc.Passages[Utils.UP]=Utils.PassageType.NONE
 			var toend:=rand.randf()<EndRunProbablility
 			run.push_back(nc.MapPos)
-			if toend && y!=MazeHeight-1:
+			if toend || x==MazeWidth-1:
 				nc.Passages[Utils.RIGHT]=Utils.PassageType.NONE
 				PotentialCells[nc.MapPos]=nc
 				var r=rand.randi_range(0,run.size()-1)
 				for i in run:
-					PotentialCells[i].Passages[Utils.DOWN]=Utils.PassageType.NORMAL if i==run[r] else Utils.PassageType.NONE 
+					PotentialCells[i].Passages[Utils.DOWN]=Utils.PassageType.NORMAL if (i==run[r] && y!=MazeHeight-1) else Utils.PassageType.NONE 
 				run.clear()
 			else:
 				nc.Passages[Utils.RIGHT]=Utils.PassageType.NORMAL

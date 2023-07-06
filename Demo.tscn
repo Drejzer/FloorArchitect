@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomGrowerFloorArchitect.gd" id="3_8wwn2"]
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SelfAvoidingWalkerFloorArchitect.gd" id="4_3k0kf"]
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/LoopErasingWalkerFloorArchitect.gd" id="5_j4ic5"]
-[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SidewinderFloorArchitect.gd" id="6_jbpdd"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SidewinderSamplerFloorArchitect.gd" id="6_kyhmu"]
 
 [node name="Test" type="Node2D"]
 script = ExtResource("2")
@@ -33,9 +33,9 @@ script = ExtResource("5_j4ic5")
 main_path_length = 10
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("6_jbpdd")
+script = ExtResource("6_kyhmu")
+BraidTreshold = 1.0
 SampleSize = 11
-SamplingMode = "Wide"
 
 [connection signal="FloorPlanned" from="RGFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="FloorPlanned" from="SAWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]

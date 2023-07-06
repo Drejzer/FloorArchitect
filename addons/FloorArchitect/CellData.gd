@@ -12,3 +12,10 @@ var RoomType:int=0
 
 ## Map coordinates of the cell
 var MapPos:Vector2i=Vector2i(0,0)
+
+func duplicate()->CellData:
+	var nc:=CellData.new()
+	nc.MapPos=MapPos
+	nc.Passages=Passages.duplicate(true)
+	nc.RoomType=RoomType
+	return nc

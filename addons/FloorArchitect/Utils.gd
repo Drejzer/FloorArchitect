@@ -21,6 +21,7 @@ const DOWN=Vector2i(0,1)
 ## Vector pointing LEFTt, used to identify exits from a cell
 const LEFT=Vector2i(-1,0)
 
+## Returns a dictionary of Vector2i positions as keys and true boolean values, representing the leaves or dead ends of the level
 static func GetLeaves(map:Dictionary)->Dictionary:
 	var leaves:={}
 	for r in map.keys():
@@ -125,11 +126,3 @@ static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO)->CellData:
 			Utils.LEFT:Utils.PassageType.UNDEFINED}
 	c.RoomType=0
 	return c
-
-
-static func DuplicateCell(cd:CellData)->CellData:
-	var nc:=CellData.new()
-	nc.MapPos=cd.MapPos
-	nc.RoomType=cd.RoomType
-	nc.Passages=cd.Passages.duplicate(true)
-	return nc
