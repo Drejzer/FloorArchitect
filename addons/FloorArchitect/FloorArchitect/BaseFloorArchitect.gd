@@ -29,14 +29,12 @@ func PlanFloor()->void:
 ##
 ## Creates and adds a new [class CellData] to the [member Cells], will overwrite PassageType.NONE and PassageType.UNDEFINED of existing cells.
 func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
-	var nc:=Utils.CreateTemplateCell()
-	nc.MapPos=pos
+	var nc:=Utils.CreateTemplateCell(pos)
 	nc.Passages=passages
 	if !Cells.has(nc.MapPos+Utils.UP):
 		if add_potential && passages[Utils.UP] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else Utils.CreateTemplateCell()
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else Utils.CreateTemplateCell(nc.MapPos+Utils.UP)
 			pc.Passages[Utils.DOWN]=nc.Passages[Utils.UP]
-			pc.MapPos=nc.MapPos+Utils.UP
 			PotentialCells[pc.MapPos]=pc
 	else:
 		if Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
@@ -46,9 +44,8 @@ func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
 		
 	if !Cells.has(nc.MapPos+Utils.RIGHT):
 		if add_potential && passages[Utils.RIGHT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=(PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else Utils.CreateTemplateCell())
+			var pc:CellData=(PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else Utils.CreateTemplateCell(nc.MapPos+Utils.RIGHT))
 			pc.Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
-			pc.MapPos=nc.MapPos+Utils.RIGHT
 			PotentialCells[pc.MapPos]=pc
 	else:
 		if Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
@@ -58,8 +55,7 @@ func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
 		
 	if !Cells.has(nc.MapPos+Utils.DOWN):
 		if add_potential && passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else Utils.CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Utils.DOWN
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else Utils.CreateTemplateCell(nc.MapPos+Utils.DOWN)
 			pc.Passages[Utils.UP]=nc.Passages[Utils.DOWN]
 			PotentialCells[pc.MapPos]=pc
 	else:
@@ -70,9 +66,8 @@ func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
 		
 	if !Cells.has(nc.MapPos+Utils.LEFT):
 		if add_potential && passages[Utils.LEFT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else Utils.CreateTemplateCell()
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else Utils.CreateTemplateCell(nc.MapPos+Utils.LEFT)
 			pc.Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
-			pc.MapPos=nc.MapPos+Utils.LEFT
 			PotentialCells[pc.MapPos]=pc
 	else:
 		if Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:

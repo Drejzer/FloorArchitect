@@ -46,13 +46,11 @@ func Walk()->void:
 
 
 func RealizePath()->void:
-	var current=Utils.CreateTemplateCell()
-	current.MapPos=path.pop_front()
+	var current=Utils.CreateTemplateCell(path.pop_front())
 	AddNewCell(current.MapPos,current.Passages,false)
 	while path.size()>0:
 		var prev=current.MapPos
-		current=Utils.CreateTemplateCell()
-		current.MapPos=path.pop_front()
+		current=Utils.CreateTemplateCell(path.pop_front())
 		current.Passages[prev-current.MapPos]=Utils.PassageType.NORMAL
 		AddNewCell(current.MapPos,current.Passages,false)
 	
@@ -63,12 +61,11 @@ func MakeSideRooms()->void:
 	while tmp.size():
 		dirs.push_back(tmp.pop_at(rand.randi()%tmp.size()))
 	while Cells.size()<main_path_length+sideroom_count:
-		var r = rand.randi_range(0,Cells.size()-1)
+		var r = rand.randi_range(0,Cells.size()-2)
 		var pos=Cells.keys()[r]
 		for p in dirs:
 			if pos+p not in Cells.keys():
-				var nc=Utils.CreateTemplateCell()
-				nc.MapPos=pos+p
+				var nc=Utils.CreateTemplateCell(pos+p)
 				nc.Passages[-p]=Utils.PassageType.NORMAL
 				AddNewCell(nc.MapPos,nc.Passages,false)
 				break
@@ -77,12 +74,12 @@ func MakeSideRooms()->void:
 ## Picks next direction to walk in
 func GetNextDirection(lastdir:Vector2i=Vector2i.ZERO,dirs:=direction_weigths.duplicate(true))->Vector2i:
 	var k=[]
-	if lastdir!=Vector2i.ZERO:
+	if lastdir!=Vector2i.ZERO and lastdir in dirs:
 		dirs[lastdir]+=continuation_bias
 	for i in dirs.keys():
 		for x in range(dirs[i]):
 			k.push_back(i)
-	if lastdir!=Vector2i.ZERO:
+	if lastdir!=Vector2i.ZERO and lastdir in dirs:
 		dirs[lastdir]-=continuation_bias
 	var i=rand.randi_range(0,k.size()-1)
 	return k[i]

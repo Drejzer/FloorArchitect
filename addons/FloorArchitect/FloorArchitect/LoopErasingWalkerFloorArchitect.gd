@@ -38,13 +38,11 @@ func Walk()->void:
 
 
 func RealizePath()->void:
-	var current=Utils.CreateTemplateCell()
-	current.MapPos=path.pop_front()
+	var current:=Utils.CreateTemplateCell(path.pop_front())
 	AddNewCell(current.MapPos,current.Passages,false)
 	while path.size()>0:
 		var prev=current.MapPos
-		current=Utils.CreateTemplateCell()
-		current.MapPos=path.pop_front()
+		current=Utils.CreateTemplateCell(path.pop_front())
 		current.Passages[prev-current.MapPos]=Utils.PassageType.NORMAL
 		AddNewCell(current.MapPos,current.Passages,false)
 	
@@ -59,8 +57,7 @@ func MakeSideRooms()->void:
 		var pos=Cells.keys()[r]
 		for p in dirs:
 			if pos+p not in Cells.keys():
-				var nc=Utils.CreateTemplateCell()
-				nc.MapPos=pos+p
+				var nc=Utils.CreateTemplateCell(pos+p)
 				nc.Passages[-p]=Utils.PassageType.NORMAL
 				AddNewCell(nc.MapPos,nc.Passages,false)
 				break

@@ -116,8 +116,9 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:
 	return bapdict
 
 ## Generates a CellData instance at position (0,0) with 4 UNDEFINED passages
-static func CreateTemplateCell()->CellData:
+static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO)->CellData:
 	var c:=CellData.new()
+	c.MapPos=pos
 	c.Passages={Utils.UP:Utils.PassageType.UNDEFINED,
 			Utils.RIGHT:Utils.PassageType.UNDEFINED,
 			Utils.DOWN:Utils.PassageType.UNDEFINED,

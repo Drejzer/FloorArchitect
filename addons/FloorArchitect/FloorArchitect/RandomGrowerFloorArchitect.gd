@@ -39,8 +39,7 @@ func RealizeCell(nc:CellData):
 	if !Cells.has(nc.MapPos+Utils.UP):
 		if nc.Passages[Utils.UP] not in [Utils.PassageType.NONE] \
 		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else Utils.CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Utils.UP
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else Utils.CreateTemplateCell(nc.MapPos+Utils.UP)
 			pc.Passages[Utils.DOWN]=nc.Passages[Utils.UP]
 			PotentialCells[pc.MapPos]=pc
 	else:
@@ -49,8 +48,7 @@ func RealizeCell(nc:CellData):
 	if !Cells.has(nc.MapPos+Utils.RIGHT):
 		if  nc.Passages[Utils.RIGHT] not in [Utils.PassageType.NONE] \
 		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else Utils.CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Utils.RIGHT
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else Utils.CreateTemplateCell(nc.MapPos+Utils.RIGHT)
 			pc.Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
 			PotentialCells[pc.MapPos]=pc
 	else:
@@ -59,8 +57,7 @@ func RealizeCell(nc:CellData):
 	if !Cells.has(nc.MapPos+Utils.DOWN):
 		if nc.Passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED] \
 		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else Utils.CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Utils.DOWN
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else Utils.CreateTemplateCell(nc.MapPos+Utils.DOWN)
 			pc.Passages[Utils.UP]=nc.Passages[Utils.DOWN]
 			PotentialCells[pc.MapPos]=pc
 	else:
@@ -69,8 +66,7 @@ func RealizeCell(nc:CellData):
 	if !Cells.has(nc.MapPos+Utils.LEFT):
 		if nc.Passages[Utils.LEFT] not in [Utils.PassageType.NONE] \
 		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else Utils.CreateTemplateCell()
-			pc.MapPos=nc.MapPos+Utils.LEFT
+			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else Utils.CreateTemplateCell(nc.MapPos+Utils.LEFT)
 			pc.Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
 			PotentialCells[pc.MapPos]=pc
 	else:
