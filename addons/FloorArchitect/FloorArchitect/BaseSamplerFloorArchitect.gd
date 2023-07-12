@@ -57,7 +57,6 @@ func BraidMaze()->void:
 	var ends=Utils.GetLeaves(PotentialCells).keys().duplicate()
 	var total=ends.size()*1.0
 	while ends.size()/total>1-BraidTreshold:
-		print("braiding")
 		var i=rand.randi_range(0,ends.size()-1)
 		var x=ends.pop_at(i)
 		for p in PotentialCells[x].Passages.keys():

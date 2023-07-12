@@ -126,3 +126,4 @@ static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO)->CellData:
 			Utils.LEFT:Utils.PassageType.UNDEFINED}
 	c.RoomType=0
 	return c
+	

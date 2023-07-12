@@ -6,7 +6,7 @@ var gen=false
 
 var briges_and_aps:={}
 var dists:={}
-
+	
 func _ready() -> void:
 	#randomize()
 	$FloorArchitect.setup(1337)
@@ -23,9 +23,10 @@ func _process(_delta: float) -> void:
 				if c.has_method("set_Content_visibility"):
 					c.set_Content_visibility(c.Data.MapPos in briges_and_aps["ArticulationPoints"])
 			dists=Utils.GetShortestPathsAndDistances($FloorArchitect.Cells)
-				
-	cdir.y=-1 if Input.is_action_pressed("ui_up") else (1 if Input.is_action_pressed("ui_down") else 0)
-	cdir.x=-1 if Input.is_action_pressed("ui_left") else (1 if Input.is_action_pressed("ui_right") else 0)
+
+	
+	cdir.y=-1 if Input.is_action_pressed("c_up") else (1 if Input.is_action_pressed("c_down") else 0) 
+	cdir.x=-1 if Input.is_action_pressed("c_left") else (1 if Input.is_action_pressed("c_right") else 0)
 	cdir=cdir.normalized()*_delta*1000
 	$Camera2D.position+=cdir
 
