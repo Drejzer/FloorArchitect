@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bpmrfjkjk355r"]
+[gd_scene load_steps=9 format=3 uid="uid://bpmrfjkjk355r"]
 
 [ext_resource type="Script" path="res://Demo.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://crw1xqhqj0g50" path="res://Cell/Cell.tscn" id="2_c5pt2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/LoopErasingWalkerFloorArchitect.gd" id="5_j4ic5"]
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SidewinderSamplerFloorArchitect.gd" id="6_kyhmu"]
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomKruskalSamplerFloorArchitect.gd" id="7_os4ah"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RecursiveBacktrackerSamplerFloorArchitect.gd" id="8_b0p6t"]
 
 [node name="Test" type="Node2D"]
 script = ExtResource("2")
@@ -19,6 +20,9 @@ position = Vector2(0, 1)
 
 [node name="RGFloorArchitect" type="Node" parent="."]
 script = ExtResource("3_8wwn2")
+minimum_room_count = null
+maximum_room_count = null
+Cells = null
 
 [node name="SAWFloorArchitect" type="Node" parent="."]
 script = ExtResource("4_3k0kf")
@@ -36,14 +40,29 @@ main_path_length = 10
 
 [node name="SWSFloorArchitect" type="Node" parent="."]
 script = ExtResource("6_kyhmu")
+MazeWidth = null
+MazeHeight = null
+BraidTreshold = null
+EndRunProbablility = null
 SampleSize = 11
+InitialPosition = null
+SamplingMode = null
+PassageWeigths = null
+Cells = null
+
+[node name="RKSFloorArchitect" type="Node" parent="."]
+script = ExtResource("7_os4ah")
+BraidTreshold = 1.0
+EndRunProbablility = null
+SampleSize = 33
+SamplingMode = "Deep"
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("7_os4ah")
-SamplingMode = "Wide"
+script = ExtResource("8_b0p6t")
 
 [connection signal="FloorPlanned" from="RGFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="FloorPlanned" from="SAWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="FloorPlanned" from="LEWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="FloorPlanned" from="SWSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
+[connection signal="FloorPlanned" from="RKSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="FloorPlanned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]

@@ -117,13 +117,16 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:
 	return bapdict
 
 ## Generates a CellData instance at position (0,0) with 4 UNDEFINED passages
-static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO)->CellData:
+static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO,defined:bool=false)->CellData:
 	var c:=CellData.new()
 	c.MapPos=pos
-	c.Passages={Utils.UP:Utils.PassageType.UNDEFINED,
+	c.Passages={Utils.UP:Utils.PassageType.NONE,
+			Utils.RIGHT:Utils.PassageType.NONE,
+			Utils.DOWN:Utils.PassageType.NONE,
+			Utils.LEFT:Utils.PassageType.NONE} if defined else {Utils.UP:Utils.PassageType.UNDEFINED,
 			Utils.RIGHT:Utils.PassageType.UNDEFINED,
 			Utils.DOWN:Utils.PassageType.UNDEFINED,
 			Utils.LEFT:Utils.PassageType.UNDEFINED}
-	c.RoomType=0
+	c.CellType=0
 	return c
 	

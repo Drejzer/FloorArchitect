@@ -5,10 +5,10 @@
 class_name CellData extends RefCounted
 
 ## Determines which sides of the cell have which type of wall (or no wall at all).[br]
-## Holds pairs DIRECTION:[enum Utils.PassageType]
+## Holds pairs DIRECTION:[enum Utils.PassageType] (alternatively can be used as outgoing edge weigths
 var Passages={}
-## PLACEHOLDER Type of predefined room (those can consist of multiple cells) 
-var RoomType:int=0
+## Type of cell, used mostly in
+var CellType:int=0
 
 ## Map coordinates of the cell
 var MapPos:Vector2i=Vector2i(0,0)
@@ -17,5 +17,5 @@ func duplicate()->CellData:
 	var nc:=CellData.new()
 	nc.MapPos=MapPos
 	nc.Passages=Passages.duplicate(true)
-	nc.RoomType=RoomType
+	nc.CellType=CellType
 	return nc

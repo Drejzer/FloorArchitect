@@ -6,7 +6,7 @@ class_name BaseFloorArchitect extends Node
 var rand:=RandomNumberGenerator.new()
 
 signal FloorPlanned
-@export var Weigths:={"NONE":3
+@export var PassageWeigths:={"NONE":3
 			,"NORMAL":5
 			,"HIDDEN":0
 			,"LOCKED":0

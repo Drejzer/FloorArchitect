@@ -34,7 +34,7 @@ func GetNextCell()->CellData:
 ## Removes the selected cell from [member PotentialCells], randomises it's passages while respecting existing cells, and adds it to [member Cells]. 
 ## Additionally adds to [member PotentialCells] according to the now defined passages
 func RealizeCell(nc:CellData):
-	var psgs=DefinePassages(Weigths,nc.Passages)
+	var psgs=DefinePassages(PassageWeigths,nc.Passages)
 	nc.Passages=psgs
 	if !Cells.has(nc.MapPos+Utils.UP):
 		if nc.Passages[Utils.UP] not in [Utils.PassageType.NONE] \
@@ -81,7 +81,7 @@ func EnforceMinimum()->void:
 	var tmp:=[]
 	while tmp2.size():
 		tmp.push_back(tmp2.pop_at(rand.randi()%tmp2.size()))
-	var psg=DefinePassages(Weigths)
+	var psg=DefinePassages(PassageWeigths)
 	for i in tmp:
 		if Cells[i].Passages[Utils.UP] == Utils.PassageType.NONE && !Cells.has(i+Utils.UP):
 			psg[Utils.DOWN]=Utils.PassageType.NORMAL

@@ -3,6 +3,9 @@
 
 class_name SidewinderSamplerFloorArchitect extends BaseSamplerFloorArchitect
 
+## The probability of ending the "run" of cells in the algorithm
+@export_range(0.0,1.0) var EndRunProbablility:float=0.5
+
 ## Geerates the maze that will be used to sample floor layouts.
 func GenerateMaze()->void:
 	var run:=[]

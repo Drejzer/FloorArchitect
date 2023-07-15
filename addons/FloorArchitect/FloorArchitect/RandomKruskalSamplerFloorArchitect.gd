@@ -25,8 +25,7 @@ func GenerateMaze()->void:
 			PotentialCells[a].Passages[b-a]=Utils.PassageType.NORMAL
 	for y in range(MazeHeight):
 		for x in range(MazeWidth):
-			var nc:=Utils.CreateTemplateCell()
-			nc.MapPos=Vector2i(x,y)
+			var nc:=Utils.CreateTemplateCell(Vector2i(x,y),true)
 			PotentialCells[nc.MapPos]=nc
 			cells_by_set[y*MazeWidth+x]=[nc.MapPos]
 			set_by_cell[nc.MapPos]=y*MazeWidth+x

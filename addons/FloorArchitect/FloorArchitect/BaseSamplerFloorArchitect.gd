@@ -10,8 +10,6 @@ class_name BaseSamplerFloorArchitect extends BaseFloorArchitect
 @export var MazeHeight:int=30
 ## what fraction of dead end cells are to be converted into loops
 @export_range(0.0,1.0) var BraidTreshold:float=0.0
-## The probability of ending the "run" of cells in the algorithm
-@export_range(0.0,1.0) var EndRunProbablility:float=0.5
 
 @export_category("Floor Sampling")
 ## How many cells are to be sampled in the layout
@@ -66,8 +64,6 @@ func BraidMaze()->void:
 				if ends.has(x+p):
 					ends.pop_at(ends.find(x+p))
 				break
-		
-		
 
 ## Seeds the [member rand] and calls [member GenerateMaze]
 func setup(rseed:int=1337)->void:

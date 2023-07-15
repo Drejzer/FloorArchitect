@@ -9,7 +9,7 @@ signal SetupFinished
 func setup(d:CellData) -> void:
 	Data.Passages=d.Passages
 	Data.MapPos=d.MapPos
-	Data.RoomType=d.RoomType
+	Data.CellType=d.CellType
 	configure_walls()
 	position=Vector2(Data.MapPos.x*Size_x,Data.MapPos.y*Size_y)
 	emit_signal("SetupFinished")
