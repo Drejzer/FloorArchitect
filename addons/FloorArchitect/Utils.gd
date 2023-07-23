@@ -3,6 +3,15 @@
 extends Node
 class_name Utils
 
+enum RoomType {
+			Start=0,
+			Boss=1,
+			Encounter=2,
+			Challenge=3,
+			Treasure=4,
+			Shop=5
+			}
+
 ## Describes types of passages (or lack thereof) between adjacent cells.
 enum PassageType {
 				UNDEFINED=-1,
@@ -70,9 +79,9 @@ static func GetShortestPathsAndDistances(map:Dictionary)->Dictionary:
 ## Finds all bridges and articulation points (cut vertices) of the provided map.[br]
 ## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys.
 ##
-## Returns a dictionary consisting of a pair of dictionaries one adressed "Bridges" and the other adressed "ArticulationPoints"
-## 
-static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:
+## Returns an array of dictionaries consisting of a pair of dictionaries one adressed "Bridges" and the other adressed "ArticulationPoints"[br]
+## If the size of returned array is bigger than 1, the map is not coherent. 
+static func GetBridgesAndArticulationPoints(map:Dictionary)->Array:
 	var bapdict:={"Bridges":{},"ArticulationPoints":{}}
 	var time:=[0]
 	var dfso:={}
@@ -111,10 +120,14 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Dictionary:
 			if cc>1:
 				bapdict.ArticulationPoints[y]=true
 		pass
-	
+	var result:=[]
 	parents[map.keys()[0]]=null
-	traverse.call(map.keys()[0],traverse);
-	return bapdict
+	for k in map.keys():
+		if !visited[k]:
+			traverse.call(map.keys()[0],traverse);
+			result.push_back(bapdict.duplicate(true))
+			bapdict.clear()
+	return result
 
 ## Generates a CellData instance at position (0,0) with 4 UNDEFINED passages
 static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO,defined:bool=false)->CellData:

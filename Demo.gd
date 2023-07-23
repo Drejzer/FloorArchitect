@@ -4,7 +4,7 @@ extends Node2D
 
 var gen=false
 
-var briges_and_aps:={}
+var briges_and_aps:=[]
 var dists:={}
 	
 func _ready() -> void:
@@ -21,7 +21,7 @@ func _process(_delta: float) -> void:
 			briges_and_aps=Utils.GetBridgesAndArticulationPoints($FloorArchitect.Cells)
 			for c in $map.get_children():
 				if c.has_method("set_Content_visibility"):
-					c.set_Content_visibility(c.Data.MapPos in briges_and_aps["ArticulationPoints"])
+					c.set_Content_visibility(c.Data.MapPos in briges_and_aps[0]["ArticulationPoints"])
 			dists=Utils.GetShortestPathsAndDistances($FloorArchitect.Cells)
 
 	
