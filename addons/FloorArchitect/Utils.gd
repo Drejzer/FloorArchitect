@@ -3,6 +3,42 @@
 extends Node
 class_name Utils
 
+## Assumes an array [key,value]
+class PriorityQueue:
+	var _q:=[]
+	func _heapify(pos:int):
+		var left=_q[pos*2+1].duplicate() if pos*2+1<_q.size() else [999999,null]
+		var right=_q[pos*2+2].duplicate() if pos*2+2<_q.size() else [999999,null]
+		var min=left if left[0]<right[0]&&left[0]<_q[pos][0] else (right if right[0]<_q[pos][0]&&right[0]<_q[pos][0] else _q[pos].duplicate())
+		if min==left:
+			_q[pos*2+1]=_q[pos].duplicate()
+			_q[pos]=min
+			_heapify(pos*2+1)
+		elif min==right:
+			_q[pos*2+2]=_q[pos].duplicate()
+			_q[pos]=min
+			_heapify(pos*2+2)
+	func is_empty():
+		return _q.is_empty()
+	func enqueue(x):
+		var i=_q.size()
+		_q.push_back(x)
+		while i>0&&_q[i][0]<_q[(i-1)/2][0]:
+			var tmp=_q[(i-1)/2].duplicate()
+			_q[(i-1)/2]=_q[i]
+			_q[i]=tmp
+			i=(i-1)/2
+	func front():
+		return _q.front()
+	func dequeue():
+		var fr=_q.front()
+		if _q.size()>1:
+			_q[0]=_q.pop_back()
+			_heapify(0)
+		else :
+			_q.pop_back()
+		return fr
+
 enum RoomType {
 			Start=0,
 			Boss=1,
@@ -143,3 +179,26 @@ static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO,defined:bool=false)->C
 	c.CellType=0
 	return c
 	
+static func DijkstraDistance(map:Dictionary)->Dictionary:
+	var res:={"DistanceMatrix":{},"ParentsLists":{}}
+	for start in map.keys():
+		var visited:={}
+		var pq:=PriorityQueue.new()
+		for p in map.keys():
+			visited[p]=false
+		res["DistanceMatrix"][start]=map.duplicate(true)
+		res["ParentsLists"][start]=map.duplicate(true)
+		var working=res["DistanceMatrix"][start]
+		var parents=res["ParentsLists"][start]
+		pq.enqueue([0,start,null])
+		while !pq.is_empty():
+			var current=pq.dequeue()
+			if current[1]!=null && !visited[current[1]]:
+				visited[current[1]]=true
+				working[current[1]]=current[0]
+				parents[current[1]]=current[2]
+				for d in map[current[1]].Passages:
+					if map[current[1]].Passages[d] not in [PassageType.NONE,PassageType.UNDEFINED]:
+						pq.enqueue([current[0]+1,current[1]+d,current[1]])
+		
+	return res

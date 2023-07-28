@@ -17,14 +17,13 @@ CellScene = ExtResource("2_c5pt2")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, 1)
-zoom = Vector2(0.75, 0.75)
 
 [node name="RGFloorArchitect" type="Node" parent="."]
 script = ExtResource("3_8wwn2")
-minimum_room_count = 1200
-maximum_room_count = 1221
+minimum_room_count = 500
+maximum_room_count = 500
 PassageWeigths = {
-"CONNECTION": 1,
+"CONNECTION": 0,
 "HIDDEN": 0,
 "LOCKED": 0,
 "NONE": 8,
@@ -60,10 +59,10 @@ Cells = null
 
 [node name="FloorArchitect" type="Node" parent="."]
 script = ExtResource("7_os4ah")
-MazeWidth = 100
-MazeHeight = 75
+MazeWidth = 120
+MazeHeight = 90
 BraidTreshold = 1.0
-SampleSize = 1200
+SampleSize = 512
 
 [node name="RBSFloorArchitect" type="Node" parent="."]
 script = ExtResource("8_b0p6t")

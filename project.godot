@@ -14,6 +14,7 @@ config/name="FloorArchitect"
 run/main_scene="res://Demo.tscn"
 config/features=PackedStringArray("4.1")
 config/icon="res://icon.png"
+boot_splash/minimum_display_time=1
 
 [editor_plugins]
 
@@ -71,4 +72,5 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+camera/depth_of_field/depth_of_field_bokeh_quality=0
 environment/default_environment="res://default_env.tres"

@@ -11,7 +11,7 @@ func _ready() -> void:
 	#randomize()
 	$FloorArchitect.setup(1337)
 	genmap()
-			
+
 func _process(_delta: float) -> void:
 	var cdir=Vector2(0,0)
 	if Input.is_action_just_released("test"):
@@ -22,8 +22,12 @@ func _process(_delta: float) -> void:
 			for c in $map.get_children():
 				if c.has_method("set_Content_visibility"):
 					c.set_Content_visibility(c.Data.MapPos in briges_and_aps[0]["ArticulationPoints"])
+			var tme=Time.get_ticks_usec()
 			dists=Utils.GetShortestPathsAndDistances($FloorArchitect.Cells)
-
+			var tim=Time.get_ticks_usec()
+			var d2=Utils.DijkstraDistance($FloorArchitect.Cells)
+			print(Time.get_ticks_usec()-tim)
+			print(tim-tme)
 	
 	cdir.y=-1 if Input.is_action_pressed("c_up") else (1 if Input.is_action_pressed("c_down") else 0) 
 	cdir.x=-1 if Input.is_action_pressed("c_left") else (1 if Input.is_action_pressed("c_right") else 0)
