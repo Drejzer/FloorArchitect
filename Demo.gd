@@ -19,15 +19,16 @@ func _process(_delta: float) -> void:
 	elif Input.is_action_just_released("display_AP"):
 		if gen:
 			briges_and_aps=Utils.GetBridgesAndArticulationPoints($FloorArchitect.Cells)
-			for c in $map.get_children():
-				if c.has_method("set_Content_visibility"):
-					c.set_Content_visibility(c.Data.MapPos in briges_and_aps[0]["ArticulationPoints"])
+			for i in range(briges_and_aps.size()):
+				if briges_and_aps.size()>1:
+					print(i,"th disjoint subgraph with origin at ",briges_and_aps[i]["Origin"])
+				for c in $map.get_children():
+					if c.has_method("set_Content_visibility"):
+						c.set_Content_visibility(c.get_node("ContentImage").visible || c.Data.MapPos in briges_and_aps[i]["ArticulationPoints"])
+						
 			var tme=Time.get_ticks_usec()
-			dists=Utils.GetShortestPathsAndDistances($FloorArchitect.Cells)
-			var tim=Time.get_ticks_usec()
-			var d2=Utils.DijkstraDistance($FloorArchitect.Cells)
-			print(Time.get_ticks_usec()-tim)
-			print(tim-tme)
+			dists=Utils.DijkstraDistances($FloorArchitect.Cells)
+			print(Time.get_ticks_usec()-tme)
 	
 	cdir.y=-1 if Input.is_action_pressed("c_up") else (1 if Input.is_action_pressed("c_down") else 0) 
 	cdir.x=-1 if Input.is_action_pressed("c_left") else (1 if Input.is_action_pressed("c_right") else 0)

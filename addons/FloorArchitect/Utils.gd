@@ -78,10 +78,10 @@ static func GetLeaves(map:Dictionary)->Dictionary:
 			leaves[r]=true
 	return leaves
 
-## Generates and returns a dictionary of shortest paths between each cell.[br]
+## Generates and returns a dictionaryconsisting of a dictionaryholding distances between cells, and a dictionary of "itnermediate steps" between cells
 ## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys[br]
 ## Returns a dictionary with two dictionaries adressed by "DistanceMatrix" and "PathMatrix" respectively.
-static func GetShortestPathsAndDistances(map:Dictionary)->Dictionary:
+static func FloydWarshalDistances(map:Dictionary)->Dictionary:
 	const inf=9999999999999999 #nothing should be that big and it still is far from an overflow
 	var pths:={}
 	var dist:={}
@@ -131,7 +131,7 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Array:
 		low[x]=-1
 		visited[x]=false
 	
-	var traverse:=func (y,f)->void:
+	var traverse:=func (y,f,bd)->void:
 		time[0]+=1
 		visited[y]=true
 		dfso[y]=time[0]
@@ -146,23 +146,26 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Array:
 				else:
 					cc+=1
 					parents[y+d]=y
-					f.call(y+d,f)
+					f.call(y+d,f,bd)
 					low[y]=min(low[y],low[y+d])
 					if low[y+d]==dfso[y+d]:
-						bapdict.Bridges[[y,y+d]]=[y+d,y]
+						bd["Bridges"][[y,y+d]]=[y+d,y]
 					if low[y+d]>=dfso[y] and parents[y]!=null:
-						bapdict.ArticulationPoints[y]=true
+						bd["ArticulationPoints"][y]=true
 		if parents[y]==null:
 			if cc>1:
-				bapdict.ArticulationPoints[y]=true
+				bd["ArticulationPoints"][y]=true
 		pass
 	var result:=[]
-	parents[map.keys()[0]]=null
 	for k in map.keys():
 		if !visited[k]:
-			traverse.call(map.keys()[0],traverse);
+			parents[k]=null
+			bapdict["Origin"]=k
+			traverse.call(k,traverse,bapdict);
 			result.push_back(bapdict.duplicate(true))
-			bapdict.clear()
+			bapdict={"Bridges":{},"ArticulationPoints":{}}
+			time[0]=0
+			
 	return result
 
 ## Generates a CellData instance at position (0,0) with 4 UNDEFINED passages
@@ -179,7 +182,11 @@ static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO,defined:bool=false)->C
 	c.CellType=0
 	return c
 	
-static func DijkstraDistance(map:Dictionary)->Dictionary:
+	
+## Generates and returns a dictionaryconsisting of a dictionaryholding distances between cells, and a dictionary of "parents" on the shortest path between two cells 
+## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys[br]
+## Returns a dictionary with two dictionaries adressed by "DistanceMatrix" and "ParentsLists" respectively.
+static func DijkstraDistances(map:Dictionary)->Dictionary:
 	var res:={"DistanceMatrix":{},"ParentsLists":{}}
 	for start in map.keys():
 		var visited:={}
