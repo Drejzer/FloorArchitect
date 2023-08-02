@@ -1,18 +1,18 @@
 extends Node2D
 
 ## Used as representation of passages
-var Data:CellData=CellData.new()
-signal SetupFinished
-@export var Size_x:int
-@export var Size_y:int
+signal setup_finished
+@export var size_x:int
+@export var size_y:int
+var data:CellData=CellData.new()
 
 func setup(d:CellData) -> void:
-	Data.Passages=d.Passages
-	Data.MapPos=d.MapPos
-	Data.CellType=d.CellType
+	data.passages=d.passages
+	data.map_pos=d.map_pos
+	data.cell_type=d.cell_type
 	configure_walls()
-	position=Vector2(Data.MapPos.x*Size_x,Data.MapPos.y*Size_y)
-	emit_signal("SetupFinished")
+	position=Vector2(data.map_pos.x*size_x,data.map_pos.y*size_y)
+	setup_finished.emit()
 	
 
 func _ready() -> void:
@@ -22,7 +22,7 @@ func _ready() -> void:
 
 ## Sets up the display of the cell's walls
 func configure_walls()->void:
-	match(Data.Passages[Utils.UP]):
+	match(data.passages[Utils.NORTH]):
 		Utils.PassageType.NONE,Utils.PassageType.HIDDEN:
 			$Passages/PN/Sprite.visible=true
 			$Passages/PN/Sprite2.visible=false
@@ -45,7 +45,7 @@ func configure_walls()->void:
 			$Passages/PN/Sprite3.visible=false
 			$Passages/PN.rotation+=1
 			
-	match(Data.Passages[Utils.RIGHT]):
+	match(data.passages[Utils.EAST]):
 		Utils.PassageType.NONE,Utils.PassageType.HIDDEN:
 			$Passages/PE/Sprite.visible=true
 			$Passages/PE/Sprite2.visible=false
@@ -68,7 +68,7 @@ func configure_walls()->void:
 			$Passages/PE/Sprite2.visible=false
 			$Passages/PE/Sprite3.visible=false
 			
-	match(Data.Passages[Utils.DOWN]):
+	match(data.passages[Utils.SOUTH]):
 		Utils.PassageType.NONE,Utils.PassageType.HIDDEN:
 			$Passages/PS/Sprite.visible=true
 			$Passages/PS/Sprite2.visible=false
@@ -91,7 +91,7 @@ func configure_walls()->void:
 			$Passages/PS/Sprite2.visible=false
 			$Passages/PS/Sprite3.visible=false
 			
-	match(Data.Passages[Utils.LEFT]):
+	match(data.passages[Utils.WEST]):
 		Utils.PassageType.NONE,Utils.PassageType.HIDDEN:
 			$Passages/PW/Sprite.visible=true
 			$Passages/PW/Sprite2.visible=false

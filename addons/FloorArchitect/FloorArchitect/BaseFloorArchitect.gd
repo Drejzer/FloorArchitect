@@ -5,87 +5,98 @@ class_name BaseFloorArchitect extends Node
 
 var rand:=RandomNumberGenerator.new()
 
-signal FloorPlanned
-@export var PassageWeigths:={"NONE":3
-			,"NORMAL":5
-			,"HIDDEN":0
-			,"LOCKED":0
-			,"CONNECTION":0}
+signal floor_planned
+@export var passage_weigths:={"NONE":3,
+			"NORMAL":5,
+			"HIDDEN":0,
+			"LOCKED":0,
+			"CONNECTION":0,
+			}
 			
 
 ## Dictionary of cells (using [CellData]) keyed by position (using [Vector2i])
-@export var Cells: Dictionary={}
+@export var cells: Dictionary={}
 ## Dictionary of cells that can be added to the map
-var PotentialCells:Dictionary={}
+var potential_cells:Dictionary={}
 
 ## Function that generates the floor layout, should be overloaded for each implementation.[br]
 ## Base implementation should be called at the end.
-func PlanFloor()->void:
-	CleanInvalidPassages()
-	FloorPlanned.emit()
+func _plan_floor()->void:
+	clean_invalid_passages()
+	floor_planned.emit()
 
 
 ## Adds a new [class CellData] in the specified position with the specified passages.
 ##
-## Creates and adds a new [class CellData] to the [member Cells], will overwrite PassageType.NONE and PassageType.UNDEFINED of existing cells.
-func AddNewCell(pos:Vector2i, passages:Dictionary,add_potential:bool=true):
-	var nc:=Utils.CreateTemplateCell(pos)
-	nc.Passages=passages
-	if !Cells.has(nc.MapPos+Utils.UP):
-		if add_potential && passages[Utils.UP] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else Utils.CreateTemplateCell(nc.MapPos+Utils.UP)
-			pc.Passages[Utils.DOWN]=nc.Passages[Utils.UP]
-			PotentialCells[pc.MapPos]=pc
+## Creates and adds a new [class CellData] to the [member cells], will overwrite PassageType.NONE and PassageType.UNDEFINED of existing cells.
+func add_new_cell(pos:Vector2i, psgs:Dictionary,add_potential:bool=true):
+	var nc:=Utils.create_template_cell(pos)
+	nc.passages=psgs
+	if !cells.has(nc.map_pos+Utils.NORTH):
+		if (add_potential
+				and psgs[Utils.NORTH] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]):
+			var pc:CellData=(potential_cells[nc.map_pos+Utils.NORTH] if potential_cells.has(nc.map_pos+Utils.NORTH) 
+					else Utils.create_template_cell(nc.map_pos+Utils.NORTH))
+			pc.passages[Utils.SOUTH]=nc.passages[Utils.NORTH]
+			potential_cells[pc.map_pos]=pc
 	else:
-		if Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			nc.Passages[Utils.UP]=Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN]
+		if cells[nc.map_pos+Utils.NORTH].passages[Utils.SOUTH] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			nc.passages[Utils.NORTH]=cells[nc.map_pos+Utils.NORTH].passages[Utils.SOUTH]
 		else:
-			Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN]=nc.Passages[Utils.UP]
+			cells[nc.map_pos+Utils.NORTH].passages[Utils.SOUTH]=nc.passages[Utils.NORTH]
 		
-	if !Cells.has(nc.MapPos+Utils.RIGHT):
-		if add_potential && passages[Utils.RIGHT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=(PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else Utils.CreateTemplateCell(nc.MapPos+Utils.RIGHT))
-			pc.Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
-			PotentialCells[pc.MapPos]=pc
+	if !cells.has(nc.map_pos+Utils.WEST):
+		if (add_potential 
+				and psgs[Utils.WEST] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]):
+			var pc:CellData=(potential_cells[nc.map_pos+Utils.WEST] if potential_cells.has(nc.map_pos+Utils.WEST)
+					else Utils.create_template_cell(nc.map_pos+Utils.WEST))
+			pc.passages[Utils.EAST]=nc.passages[Utils.WEST]
+			potential_cells[pc.map_pos]=pc
 	else:
-		if Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			nc.Passages[Utils.RIGHT]=Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT]
+		if cells[nc.map_pos+Utils.WEST].passages[Utils.EAST] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			nc.passages[Utils.WEST]=cells[nc.map_pos+Utils.WEST].passages[Utils.EAST]
 		else:
-			Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
+			cells[nc.map_pos+Utils.WEST].passages[Utils.EAST]=nc.passages[Utils.WEST]
 		
-	if !Cells.has(nc.MapPos+Utils.DOWN):
-		if add_potential && passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else Utils.CreateTemplateCell(nc.MapPos+Utils.DOWN)
-			pc.Passages[Utils.UP]=nc.Passages[Utils.DOWN]
-			PotentialCells[pc.MapPos]=pc
+	if !cells.has(nc.map_pos+Utils.SOUTH):
+		if (add_potential
+				and psgs[Utils.SOUTH] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]):
+			var pc:CellData=(potential_cells[nc.map_pos+Utils.SOUTH] if potential_cells.has(nc.map_pos+Utils.SOUTH) 
+					else Utils.create_template_cell(nc.map_pos+Utils.SOUTH))
+			pc.passages[Utils.NORTH]=nc.passages[Utils.SOUTH]
+			potential_cells[pc.map_pos]=pc
 	else:
-		if Cells[nc.MapPos+Utils.DOWN].Passages[Utils.UP] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			nc.Passages[Utils.DOWN]=Cells[nc.MapPos+Utils.DOWN].Passages[Utils.UP]
+		if cells[nc.map_pos+Utils.SOUTH].passages[Utils.NORTH] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			nc.passages[Utils.SOUTH]=cells[nc.map_pos+Utils.SOUTH].passages[Utils.NORTH]
 		else:
-			Cells[nc.MapPos+Utils.DOWN].Passages[Utils.UP]=nc.Passages[Utils.DOWN]
+			cells[nc.map_pos+Utils.SOUTH].passages[Utils.NORTH]=nc.passages[Utils.SOUTH]
 		
-	if !Cells.has(nc.MapPos+Utils.LEFT):
-		if add_potential && passages[Utils.LEFT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else Utils.CreateTemplateCell(nc.MapPos+Utils.LEFT)
-			pc.Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
-			PotentialCells[pc.MapPos]=pc
+	if !cells.has(nc.map_pos+Utils.EAST):
+		if (add_potential 
+				and psgs[Utils.EAST] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]):
+			var pc:CellData=(
+					potential_cells[nc.map_pos+Utils.EAST] if potential_cells.has(nc.map_pos+Utils.EAST) 
+					else Utils.CreateTemplateCell(nc.map_pos+Utils.EAST)
+					)
+			pc.passages[Utils.WEST]=nc.passages[Utils.EAST]
+			potential_cells[pc.map_pos]=pc
 	else:
-		if Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
-			nc.Passages[Utils.LEFT]=Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT]
+		if cells[nc.map_pos+Utils.EAST].passages[Utils.WEST] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			nc.passages[Utils.EAST]=cells[nc.map_pos+Utils.EAST].passages[Utils.WEST]
 		else:
-			Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
-	Cells[nc.MapPos]=nc
+			cells[nc.map_pos+Utils.EAST].passages[Utils.WEST]=nc.passages[Utils.EAST]
+	cells[nc.map_pos]=nc
 
 
 ## Eliminates "open" passages to nonexisting cells
-func CleanInvalidPassages():
-	for c in Cells.values():
-		for p in c.Passages.keys():
-			if c.Passages[p] not in [Utils.PassageType.NONE]:
-				if !Cells.has(c.MapPos+p):
-					c.Passages[p]=Utils.PassageType.NONE
-			if c.Passages[p] == Utils.PassageType.UNDEFINED:
-				c.Passages[p]=Utils.PassageType.NONE
+func clean_invalid_passages():
+	for c in cells.values():
+		for p in c.passages.keys():
+			if c.passages[p] not in [Utils.PassageType.NONE]:
+				if !cells.has(c.map_pos+p):
+					c.passages[p]=Utils.PassageType.NONE
+			if c.passages[p] == Utils.PassageType.UNDEFINED:
+				c.passages[p]=Utils.PassageType.NONE
 
 func _ready() -> void:
 	rand=RandomNumberGenerator.new()
@@ -94,13 +105,13 @@ func _ready() -> void:
 ## Sets up the class. Allows for setting the seed of [member rand]
 func setup(rseed:int=1337)->void:
 	rand.seed=rseed
-	PotentialCells.clear()
-	Cells.clear()
+	potential_cells.clear()
+	cells.clear()
 	pass
 
 
 ## Generates passages for a cell by replacing the UNDEFINED values by value randomly selected based on [member Weigths]
-func DefinePassages(weigths:Dictionary,cps:Dictionary={})->Dictionary:
+func define_passages(weigths:Dictionary,cps:Dictionary={})->Dictionary:
 	var pt=[]
 	for k in weigths.keys():
 		for i in range(weigths[k]):
@@ -109,10 +120,11 @@ func DefinePassages(weigths:Dictionary,cps:Dictionary={})->Dictionary:
 	if !cps.is_empty():
 		psg=cps
 	else:
-		psg={Utils.UP:Utils.PassageType.UNDEFINED,
-			Utils.RIGHT:Utils.PassageType.UNDEFINED,
-			Utils.DOWN:Utils.PassageType.UNDEFINED,
-			Utils.LEFT:Utils.PassageType.UNDEFINED}
+		psg={Utils.NORTH:Utils.PassageType.UNDEFINED,
+				Utils.WEST:Utils.PassageType.UNDEFINED,
+				Utils.SOUTH:Utils.PassageType.UNDEFINED,
+				Utils.EAST:Utils.PassageType.UNDEFINED,
+				}
 	for k in psg.keys():
 		if psg[k] == Utils.PassageType.UNDEFINED:
 			psg[k]=pt[rand.randi_range(0,pt.size()-1)]

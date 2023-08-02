@@ -8,96 +8,100 @@ class_name RandomGrowerFloorArchitect extends BaseFloorArchitect
 @export var maximum_room_count:int=17
 
 ## Function that generates the floor layout
-func PlanFloor()->void:
-	Cells.clear()
-	PotentialCells.clear()
-	var init = Utils.CreateTemplateCell()
-	PotentialCells[init.MapPos]=init
-	while Cells.size() < maximum_room_count && !PotentialCells.is_empty():
-		if !PotentialCells.is_empty():
-			var nextc=GetNextCell()
-			RealizeCell(nextc)
-		while PotentialCells.is_empty():
-			EnforceMinimum()
-			if Cells.size()>=minimum_room_count:
+func _plan_floor()->void:
+	cells.clear()
+	potential_cells.clear()
+	var init = Utils.create_template_cell()
+	potential_cells[init.map_pos]=init
+	while cells.size() < maximum_room_count and !potential_cells.is_empty():
+		if !potential_cells.is_empty():
+			var nextc=get_next_cell()
+			realise_cell(nextc)
+		while potential_cells.is_empty():
+			enforce_minimum()
+			if cells.size()>=minimum_room_count:
 				break
 	super()
 
-## Picks next cell to be added from [member PotentialCells]
-func GetNextCell()->CellData:
-	var k=PotentialCells.keys()
+## Picks next cell to be added from [member potential_cells]
+func get_next_cell()->CellData:
+	var k=potential_cells.keys()
 	var i=rand.randi_range(0,k.size()-1)
-	return PotentialCells[k[i]]
+	return potential_cells[k[i]]
 
-## Moves a cell from [member PotentialCells] to [member Cells]
+## Moves a cell from [member potential_cells] to [member cells]
 ##
-## Removes the selected cell from [member PotentialCells], randomises it's passages while respecting existing cells, and adds it to [member Cells]. 
-## Additionally adds to [member PotentialCells] according to the now defined passages
-func RealizeCell(nc:CellData):
-	var psgs=DefinePassages(PassageWeigths,nc.Passages)
-	nc.Passages=psgs
-	if !Cells.has(nc.MapPos+Utils.UP):
-		if nc.Passages[Utils.UP] not in [Utils.PassageType.NONE] \
-		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.UP] if PotentialCells.has(nc.MapPos+Utils.UP) else Utils.CreateTemplateCell(nc.MapPos+Utils.UP)
-			pc.Passages[Utils.DOWN]=nc.Passages[Utils.UP]
-			PotentialCells[pc.MapPos]=pc
+## Removes the selected cell from [member potential_cells], randomises it's passages while respecting existing cells, and adds it to [member cells]. 
+## Additionally adds to [member potential_cells] according to the now defined passages
+func realise_cell(nc:CellData):
+	var psgs=define_passages(passage_weigths,nc.passages)
+	nc.passages=psgs
+	if !cells.has(nc.map_pos+Utils.NORTH):
+		if (nc.passages[Utils.NORTH] not in [Utils.PassageType.NONE]
+				and cells.size()+potential_cells.size()<=maximum_room_count):
+			var pc:CellData=(potential_cells[nc.map_pos+Utils.NORTH] if potential_cells.has(nc.map_pos+Utils.NORTH) 
+					else Utils.create_template_cell(nc.map_pos+Utils.NORTH))
+			pc.passages[Utils.SOUTH]=nc.passages[Utils.NORTH]
+			potential_cells[pc.map_pos]=pc
 	else:
-		nc.Passages[Utils.UP]=Cells[nc.MapPos+Utils.UP].Passages[Utils.DOWN]
+		nc.passages[Utils.NORTH]=cells[nc.map_pos+Utils.NORTH].passages[Utils.SOUTH]
 		
-	if !Cells.has(nc.MapPos+Utils.RIGHT):
-		if  nc.Passages[Utils.RIGHT] not in [Utils.PassageType.NONE] \
-		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.RIGHT] if PotentialCells.has(nc.MapPos+Utils.RIGHT) else Utils.CreateTemplateCell(nc.MapPos+Utils.RIGHT)
-			pc.Passages[Utils.LEFT]=nc.Passages[Utils.RIGHT]
-			PotentialCells[pc.MapPos]=pc
+	if !cells.has(nc.map_pos+Utils.WEST):
+		if (nc.passages[Utils.WEST] not in [Utils.PassageType.NONE]
+				and cells.size()+potential_cells.size()<=maximum_room_count):
+			var pc:CellData=(potential_cells[nc.map_pos+Utils.WEST] if potential_cells.has(nc.map_pos+Utils.WEST) 
+					else Utils.create_template_cell(nc.map_pos+Utils.WEST))
+			pc.passages[Utils.EAST]=nc.passages[Utils.WEST]
+			potential_cells[pc.map_pos]=pc
 	else:
-		nc.Passages[Utils.RIGHT]=Cells[nc.MapPos+Utils.RIGHT].Passages[Utils.LEFT]
+		nc.passages[Utils.WEST]=cells[nc.map_pos+Utils.WEST].passages[Utils.EAST]
 		
-	if !Cells.has(nc.MapPos+Utils.DOWN):
-		if nc.Passages[Utils.DOWN] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED] \
-		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.DOWN] if PotentialCells.has(nc.MapPos+Utils.DOWN) else Utils.CreateTemplateCell(nc.MapPos+Utils.DOWN)
-			pc.Passages[Utils.UP]=nc.Passages[Utils.DOWN]
-			PotentialCells[pc.MapPos]=pc
+	if !cells.has(nc.map_pos+Utils.SOUTH):
+		if (nc.passages[Utils.SOUTH] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]
+				and cells.size()+potential_cells.size()<=maximum_room_count):
+			var pc:CellData=(potential_cells[nc.map_pos+Utils.SOUTH] if potential_cells.has(nc.map_pos+Utils.SOUTH) 
+					else Utils.create_template_cell(nc.map_pos+Utils.SOUTH))
+			pc.passages[Utils.NORTH]=nc.passages[Utils.SOUTH]
+			potential_cells[pc.map_pos]=pc
 	else:
-		nc.Passages[Utils.DOWN]=Cells[nc.MapPos+Utils.DOWN].Passages[Utils.UP]
+		nc.passages[Utils.SOUTH]=cells[nc.map_pos+Utils.SOUTH].passages[Utils.NORTH]
 		
-	if !Cells.has(nc.MapPos+Utils.LEFT):
-		if nc.Passages[Utils.LEFT] not in [Utils.PassageType.NONE] \
-		and Cells.size()+PotentialCells.size()<=maximum_room_count:
-			var pc:CellData=PotentialCells[nc.MapPos+Utils.LEFT] if PotentialCells.has(nc.MapPos+Utils.LEFT) else Utils.CreateTemplateCell(nc.MapPos+Utils.LEFT)
-			pc.Passages[Utils.RIGHT]=nc.Passages[Utils.LEFT]
-			PotentialCells[pc.MapPos]=pc
+	if !cells.has(nc.map_pos+Utils.EAST):
+		if (nc.passages[Utils.EAST] not in [Utils.PassageType.NONE]
+				and cells.size()+potential_cells.size()<=maximum_room_count):
+			var pc:CellData=(potential_cells[nc.map_pos+Utils.EAST] if potential_cells.has(nc.map_pos+Utils.EAST) 
+					else Utils.create_template_cell(nc.map_pos+Utils.EAST))
+			pc.passages[Utils.WEST]=nc.passages[Utils.EAST]
+			potential_cells[pc.map_pos]=pc
 	else:
-		nc.Passages[Utils.LEFT]=Cells[nc.MapPos+Utils.LEFT].Passages[Utils.RIGHT]
+		nc.passages[Utils.EAST]=cells[nc.map_pos+Utils.EAST].passages[Utils.WEST]
 			
-	Cells[nc.MapPos]=nc
-	PotentialCells.erase(nc.MapPos)
+	cells[nc.map_pos]=nc
+	potential_cells.erase(nc.map_pos)
 
 ## Forcefully adds additional room, if the minimum has not been reached
-func EnforceMinimum()->void:
-	var tmp2:=Cells.keys()
+func enforce_minimum()->void:
+	var tmp2:=cells.keys()
 	var tmp:=[]
 	while tmp2.size():
 		tmp.push_back(tmp2.pop_at(rand.randi()%tmp2.size()))
-	var psg=DefinePassages(PassageWeigths)
+	var psg=define_passages(passage_weigths)
 	for i in tmp:
-		if Cells[i].Passages[Utils.UP] == Utils.PassageType.NONE && !Cells.has(i+Utils.UP):
-			psg[Utils.DOWN]=Utils.PassageType.NORMAL
-			AddNewCell(i+Utils.UP,psg)
+		if cells[i].passages[Utils.NORTH] == Utils.PassageType.NONE and !cells.has(i+Utils.NORTH):
+			psg[Utils.SOUTH]=Utils.PassageType.NORMAL
+			add_new_cell(i+Utils.NORTH,psg)
 			return
-		elif Cells[i].Passages[Utils.RIGHT] == Utils.PassageType.NONE && !Cells.has(i+Utils.RIGHT):
-			psg[Utils.LEFT]=Utils.PassageType.NORMAL
-			AddNewCell(i+Utils.RIGHT,psg)
+		elif cells[i].passages[Utils.WEST] == Utils.PassageType.NONE and !cells.has(i+Utils.WEST):
+			psg[Utils.EAST]=Utils.PassageType.NORMAL
+			add_new_cell(i+Utils.WEST,psg)
 			return
-		elif Cells[i].Passages[Utils.DOWN] == Utils.PassageType.NONE && !Cells.has(i+Utils.DOWN):
-			psg[Utils.UP]=Utils.PassageType.NORMAL
-			AddNewCell(i+Utils.DOWN,psg)
+		elif cells[i].passages[Utils.SOUTH] == Utils.PassageType.NONE and !cells.has(i+Utils.SOUTH):
+			psg[Utils.NORTH]=Utils.PassageType.NORMAL
+			add_new_cell(i+Utils.SOUTH,psg)
 			return 
-		elif Cells[i].Passages[Utils.LEFT] == Utils.PassageType.NONE && !Cells.has(i+Utils.LEFT):
-			psg[Utils.RIGHT]=Utils.PassageType.NORMAL
-			AddNewCell(i+Utils.LEFT,psg)
+		elif cells[i].passages[Utils.EAST] == Utils.PassageType.NONE and !cells.has(i+Utils.EAST):
+			psg[Utils.WEST]=Utils.PassageType.NORMAL
+			add_new_cell(i+Utils.EAST,psg)
 			return
 	
 

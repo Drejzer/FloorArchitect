@@ -15,19 +15,23 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var cdir=Vector2(0,0)
 	if Input.is_action_just_released("test"):
-			genmap()
+		genmap()
+	elif Input.is_action_just_released("test2"):
+		genmap()
+		$FloorArchitect.cells=$FloorArchitect.potential_cells.duplicate(true)
+		_on_BaseFloorArchitect_FloorPlanned()
 	elif Input.is_action_just_released("display_AP"):
 		if gen:
-			briges_and_aps=Utils.GetBridgesAndArticulationPoints($FloorArchitect.Cells)
+			briges_and_aps=Utils.get_bridges_and_articulation_points($FloorArchitect.cells)
 			for i in range(briges_and_aps.size()):
 				if briges_and_aps.size()>1:
 					print(i,"th disjoint subgraph with origin at ",briges_and_aps[i]["Origin"])
 				for c in $map.get_children():
 					if c.has_method("set_Content_visibility"):
-						c.set_Content_visibility(c.get_node("ContentImage").visible || c.Data.MapPos in briges_and_aps[i]["ArticulationPoints"])
+						c.set_Content_visibility(c.get_node("ContentImage").visible || c.data.map_pos in briges_and_aps[i]["ArticulationPoints"])
 						
 			var tme=Time.get_ticks_usec()
-			dists=Utils.DijkstraDistances($FloorArchitect.Cells)
+			dists=Utils.dijkstra_distances($FloorArchitect.cells)
 			print(Time.get_ticks_usec()-tme)
 	
 	cdir.y=-1 if Input.is_action_pressed("c_up") else (1 if Input.is_action_pressed("c_down") else 0) 
@@ -42,16 +46,16 @@ func genmap():
 	var m=Node2D.new()
 	m.name="map"
 	add_child(m,true)
-	$FloorArchitect.PlanFloor()
+	$FloorArchitect._plan_floor()
 	gen=true
 	
 
 func _on_BaseFloorArchitect_FloorPlanned() -> void:
 	await get_tree().process_frame
-	for i in $FloorArchitect.Cells:
+	for i in $FloorArchitect.cells:
 			var x=CellScene.instantiate()
-			x.Size_x=64
-			x.Size_y=64
-			x.setup($FloorArchitect.Cells[i])
+			x.size_x=64
+			x.size_y=64
+			x.setup($FloorArchitect.cells[i])
 			$map.add_child(x,true)
 	pass
