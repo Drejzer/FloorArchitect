@@ -1,6 +1,7 @@
 extends Node2D
 
 @export var CellScene:PackedScene
+@export var architect_seed:=1337
 
 var gen=false
 
@@ -9,7 +10,7 @@ var dists:={}
 	
 func _ready() -> void:
 	#randomize()
-	$FloorArchitect.setup(1337)
+	$FloorArchitect.setup(architect_seed)
 	genmap()
 
 func _process(_delta: float) -> void:

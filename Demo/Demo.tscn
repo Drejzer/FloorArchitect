@@ -51,7 +51,6 @@ sample_size = 25
 script = ExtResource("7_v815n")
 braid_treshold = 1.0
 sample_size = 25
-SamplingMode = null
 
 [node name="RBSFloorArchitect" type="Node" parent="."]
 script = ExtResource("8_5birp")
@@ -61,7 +60,6 @@ sample_size = 25
 [node name="RDSFloorArchitect" type="Node" parent="."]
 script = ExtResource("9_6n1wv")
 sample_size = 25
-SamplingMode = null
 
 [connection signal="floor_planned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="SAWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
