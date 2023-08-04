@@ -40,12 +40,12 @@ class PriorityQueue:
 		return fr
 
 enum RoomType {
-			Start=0,
-			Boss=1,
-			Encounter=2,
-			Challenge=3,
-			Treasure=4,
-			Shop=5
+			START=0,
+			BOSS=1,
+			ENCOUNTER=2,
+			CHALLENGE=3,
+			TREASURE=4,
+			SHOP=5,
 			}
 
 ## Describes types of passages (or lack thereof) between adjacent cells.
@@ -55,33 +55,41 @@ enum PassageType {
 				NORMAL=1,
 				HIDDEN=2,
 				CONNECTION=3,
-				LOCKED=4
+				LOCKED=4,
 				}
-## Vector pointing UP, used to identify exits from a cell
-const UP=Vector2i(0,-1)
-## Vector pointing RIGHT, used to identify exits from a cell
-const RIGHT=Vector2i(1,0)
-## Vector pointing DOWN, used to identify exits from a cell
-const DOWN=Vector2i(0,1)
-## Vector pointing LEFTt, used to identify exits from a cell
-const LEFT=Vector2i(-1,0)
+## Vector pointing NORTH, used to identify exits from a cell
+const NORTH=Vector2i(0,-1)
+## Vector pointing WEST, used to identify exits from a cell
+const WEST=Vector2i(-1,0)
+## Vector pointing SOUTH, used to identify exits from a cell
+const SOUTH=Vector2i(0,1)
+## Vector pointing EAST, used to identify exits from a cell
+const EAST=Vector2i(1,0)
+const NORTHWEST=Vector2i(-1,-1)
+const SOUTHWEST=Vector2i(-1,1)
+const SOUTHEAST=Vector2i(1,1)
+const NORTHEAST=Vector2i(1,-1)
 
 ## Returns a dictionary of Vector2i positions as keys and true boolean values, representing the leaves or dead ends of the level
-static func GetLeaves(map:Dictionary)->Dictionary:
-	var leaves:={}
+static func get_leaves_and_crossroads(map:Dictionary)->Dictionary:
+	var leaves:={"Leaves":{},"Cross3":{},"Cross4":{}}
 	for r in map.keys():
 		var c=0
-		for p in map[r].Passages:
-			if(map[r].Passages[p] not in [Utils.PassageType.UNDEFINED,Utils.PassageType.NONE]):
+		for p in map[r].passages:
+			if(map[r].passages[p] not in [Utils.PassageType.UNDEFINED,Utils.PassageType.NONE]):
 				c+=1
 		if c==1:
-			leaves[r]=true
+			leaves["Leaves"][r]=true
+		elif c==3:
+			leaves["Cross3"][r]=true
+		elif c==4:
+			leaves["Cross4"][r]=true
 	return leaves
 
 ## Generates and returns a dictionaryconsisting of a dictionaryholding distances between cells, and a dictionary of "itnermediate steps" between cells
 ## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys[br]
 ## Returns a dictionary with two dictionaries adressed by "DistanceMatrix" and "PathMatrix" respectively.
-static func FloydWarshalDistances(map:Dictionary)->Dictionary:
+static func floyd_warshal_distances(map:Dictionary)->Dictionary:
 	const inf=9999999999999999 #nothing should be that big and it still is far from an overflow
 	var pths:={}
 	var dist:={}
@@ -92,10 +100,10 @@ static func FloydWarshalDistances(map:Dictionary)->Dictionary:
 			if to==from:
 				dist[from][to]=0
 				pths[from][to]=null
-			elif to-from not in map[to].Passages.keys():
+			elif to-from not in map[to].passages.keys():
 				pths[from][to]=null
 				dist[from][to]=inf
-			elif map[from].Passages[to-from] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
+			elif map[from].passages[to-from] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]:
 				pths[from][to]=to
 				dist[from][to]=1
 			else:
@@ -111,13 +119,38 @@ static func FloydWarshalDistances(map:Dictionary)->Dictionary:
 						pths[from][to]=through
 	return {"PathMatrix":pths,"DistanceMatrix":dist}
 
+## Generates and returns a dictionaryconsisting of a dictionaryholding distances between cells, and a dictionary of "parents" on the shortest path between two cells 
+## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys[br]
+## Returns a dictionary with two dictionaries adressed by "DistanceMatrix" and "ParentsLists" respectively.
+static func dijkstra_distances(map:Dictionary)->Dictionary:
+	var res:={"DistanceMatrix":{},"ParentsLists":{}}
+	for start in map.keys():
+		var visited:={}
+		var pq:=PriorityQueue.new()
+		for p in map.keys():
+			visited[p]=false
+		res["DistanceMatrix"][start]=map.duplicate(true)
+		res["ParentsLists"][start]=map.duplicate(true)
+		var working=res["DistanceMatrix"][start]
+		var parents=res["ParentsLists"][start]
+		pq.enqueue([0,start,null])
+		while !pq.is_empty():
+			var current=pq.dequeue()
+			if current[1]!=null && !visited[current[1]]:
+				visited[current[1]]=true
+				working[current[1]]=current[0]
+				parents[current[1]]=current[2]
+				for d in map[current[1]].passages:
+					if map[current[1]].passages[d] not in [PassageType.NONE,PassageType.UNDEFINED]:
+						pq.enqueue([current[0]+1,current[1]+d,current[1]])
+	return res
 
 ## Finds all bridges and articulation points (cut vertices) of the provided map.[br]
 ## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys.
 ##
 ## Returns an array of dictionaries consisting of a pair of dictionaries one adressed "Bridges" and the other adressed "ArticulationPoints"[br]
 ## If the size of returned array is bigger than 1, the map is not coherent. 
-static func GetBridgesAndArticulationPoints(map:Dictionary)->Array:
+static func get_bridges_and_articulation_points(map:Dictionary)->Array:
 	var bapdict:={"Bridges":{},"ArticulationPoints":{}}
 	var time:=[0]
 	var dfso:={}
@@ -137,8 +170,8 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Array:
 		dfso[y]=time[0]
 		low[y]=time[0]
 		var cc:=0
-		for d in map[y].Passages:
-			if (map[y].Passages[d] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]):
+		for d in map[y].passages:
+			if (map[y].passages[d] not in [Utils.PassageType.NONE,Utils.PassageType.UNDEFINED]):
 				if parents[y]==y+d:
 					continue
 				if visited[y+d]:
@@ -169,43 +202,17 @@ static func GetBridgesAndArticulationPoints(map:Dictionary)->Array:
 	return result
 
 ## Generates a CellData instance at position (0,0) with 4 UNDEFINED passages
-static func CreateTemplateCell(pos:Vector2i=Vector2i.ZERO,defined:bool=false)->CellData:
+static func create_template_cell(pos:Vector2i=Vector2i.ZERO,defined:bool=false)->CellData:
 	var c:=CellData.new()
-	c.MapPos=pos
-	c.Passages={Utils.UP:Utils.PassageType.NONE,
-			Utils.RIGHT:Utils.PassageType.NONE,
-			Utils.DOWN:Utils.PassageType.NONE,
-			Utils.LEFT:Utils.PassageType.NONE} if defined else {Utils.UP:Utils.PassageType.UNDEFINED,
-			Utils.RIGHT:Utils.PassageType.UNDEFINED,
-			Utils.DOWN:Utils.PassageType.UNDEFINED,
-			Utils.LEFT:Utils.PassageType.UNDEFINED}
-	c.CellType=0
+	c.map_pos=pos
+	c.passages={Utils.NORTH:Utils.PassageType.NONE,
+			Utils.WEST:Utils.PassageType.NONE,
+			Utils.SOUTH:Utils.PassageType.NONE,
+			Utils.EAST:Utils.PassageType.NONE
+			} if defined else {Utils.NORTH:Utils.PassageType.UNDEFINED,
+					Utils.WEST:Utils.PassageType.UNDEFINED,
+					Utils.SOUTH:Utils.PassageType.UNDEFINED,
+					Utils.EAST:Utils.PassageType.UNDEFINED,
+					}
+	c.cell_type=0
 	return c
-	
-	
-## Generates and returns a dictionaryconsisting of a dictionaryholding distances between cells, and a dictionary of "parents" on the shortest path between two cells 
-## Expects a Dictionary of [CellData], with [member CellData.MapPos] as keys[br]
-## Returns a dictionary with two dictionaries adressed by "DistanceMatrix" and "ParentsLists" respectively.
-static func DijkstraDistances(map:Dictionary)->Dictionary:
-	var res:={"DistanceMatrix":{},"ParentsLists":{}}
-	for start in map.keys():
-		var visited:={}
-		var pq:=PriorityQueue.new()
-		for p in map.keys():
-			visited[p]=false
-		res["DistanceMatrix"][start]=map.duplicate(true)
-		res["ParentsLists"][start]=map.duplicate(true)
-		var working=res["DistanceMatrix"][start]
-		var parents=res["ParentsLists"][start]
-		pq.enqueue([0,start,null])
-		while !pq.is_empty():
-			var current=pq.dequeue()
-			if current[1]!=null && !visited[current[1]]:
-				visited[current[1]]=true
-				working[current[1]]=current[0]
-				parents[current[1]]=current[2]
-				for d in map[current[1]].Passages:
-					if map[current[1]].Passages[d] not in [PassageType.NONE,PassageType.UNDEFINED]:
-						pq.enqueue([current[0]+1,current[1]+d,current[1]])
-		
-	return res

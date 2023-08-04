@@ -6,16 +6,16 @@ class_name CellData extends RefCounted
 
 ## Determines which sides of the cell have which type of wall (or no wall at all).[br]
 ## Holds pairs DIRECTION:[enum Utils.PassageType] (alternatively can be used as outgoing edge weigths
-var Passages={}
-## Type of cell, used mostly in
-var CellType:int=0
+var passages={}
+## Type of cell (currently a placeholder)
+var cell_type:int=0
 
 ## Map coordinates of the cell
-var MapPos:Vector2i=Vector2i(0,0)
+var map_pos:Vector2i=Vector2i(0,0)
 
-func duplicate()->CellData:
+func duplicate(deep:bool=true)->CellData:
 	var nc:=CellData.new()
-	nc.MapPos=MapPos
-	nc.Passages=Passages.duplicate(true)
-	nc.CellType=CellType
+	nc.map_pos=map_pos
+	nc.passages=passages.duplicate(deep)
+	nc.cell_type=cell_type
 	return nc

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7ma773tqca3y"
-path="res://.godot/imported/ball.png-9a4ca347acb7532f6ae347744a6b04f7.ctex"
+uid="uid://bjo0q6c4tjcv8"
+path="res://.godot/imported/icon_p.png-680059b1b96688c91b265d2d07a96b09.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ball.png"
-dest_files=["res://.godot/imported/ball.png-9a4ca347acb7532f6ae347744a6b04f7.ctex"]
+source_file="res://addons/FloorArchitect/icon_p.png"
+dest_files=["res://.godot/imported/icon_p.png-680059b1b96688c91b265d2d07a96b09.ctex"]
 
 [params]
 
