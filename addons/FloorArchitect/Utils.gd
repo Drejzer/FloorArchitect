@@ -72,7 +72,7 @@ const NORTHEAST=Vector2i(1,-1)
 
 ## Returns a dictionary of Vector2i positions as keys and true boolean values, representing the leaves or dead ends of the level
 static func get_leaves_and_crossroads(map:Dictionary)->Dictionary:
-	var leaves:={"Leaves":{},"Cross3":{},"Cross4":{}}
+	var leaves:={"Leaves":{},"3Cross":{},"4Cross":{}}
 	for r in map.keys():
 		var c=0
 		for p in map[r].passages:
@@ -81,9 +81,9 @@ static func get_leaves_and_crossroads(map:Dictionary)->Dictionary:
 		if c==1:
 			leaves["Leaves"][r]=true
 		elif c==3:
-			leaves["Cross3"][r]=true
+			leaves["3Cross"][r]=true
 		elif c==4:
-			leaves["Cross4"][r]=true
+			leaves["3Cross"][r]=true
 	return leaves
 
 ## Generates and returns a dictionaryconsisting of a dictionaryholding distances between cells, and a dictionary of "itnermediate steps" between cells
