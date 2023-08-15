@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://w0kve4c4ij7p"]
+
+[ext_resource type="Script" path="res://Tests/tester_2.gd" id="1_famgx"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomKruskalSamplerFloorArchitect.gd" id="2_r1d8k"]
+
+[node name="tester2" type="Node2D"]
+script = ExtResource("1_famgx")
+
+[node name="FloorArchitect" type="Node" parent="."]
+script = ExtResource("2_r1d8k")
+braid_treshold = 1.0
+
+[connection signal="floor_planned" from="FloorArchitect" to="." method="_on_floor_architect_floor_planned"]

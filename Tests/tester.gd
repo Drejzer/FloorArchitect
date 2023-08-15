@@ -17,27 +17,23 @@ var bap_b_t
 var bap_e_t
 var diam=0
 
-var output:=FileAccess.open("res://Tests/data/log_RGFA10p3-5_"+Time.get_datetime_string_from_system()+".csv",FileAccess.WRITE)
-
+var output:=FileAccess.open("res://Tests/data/log_LEWFA_50-50_"+Time.get_datetime_string_from_system()+".csv",FileAccess.WRITE)
+# 10-25-50-100
 func _ready() -> void:
-	if Randomise:
-		randomize()
-		Seed=randi()
+	seed(291943)
 	$FloorArchitect.setup(Seed)
-	var line:="Seed;RoomCount;LeafCount;3CrossCount;4CrossCount;APCount;BridgeCount;Diameter;GenTime;DistTime;BAPTime;NodeTime"
+	var line:="Seed;RoomCount;LeafCount;3CrossCount;4CrossCount;APCount;BridgeCount;Diameter;GenTime;DistTime;BAPTime;NodeTime;Algorithm"
 #	print(line)
 	output.store_line(line)
-	for _j in range(25):
-		randomize()
+	for _j in range(5000):
 		Seed=randi()
 		$FloorArchitect.setup(Seed)
-		for _i in range(200):
-			layout_b_t=Time.get_ticks_usec()
-			$FloorArchitect._plan_floor()
-			line="%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d"%[Seed,$FloorArchitect.minimum_room_count,nodes["Leaves"].size(),nodes["3Cross"].size(),nodes["4Cross"].size(),bap[0]["ArticulationPoints"].size(),bap[0]["Bridges"].size(),diam,layout_e_t-layout_b_t,dist_e_t-dist_b_t,bap_e_t-bap_b_t,nodes_e_t-nodes_b_t]
-			#print(line)
-			output.store_line(line)
-			$FloorArchitect.cells.clear()
+		layout_b_t=Time.get_ticks_usec()
+		$FloorArchitect._plan_floor()
+		line="%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;LoopErasingWalker"%[Seed,$FloorArchitect.main_path_length+$FloorArchitect.sideroom_count,nodes["Leaves"].size(),nodes["3Cross"].size(),nodes["4Cross"].size(),bap[0]["ArticulationPoints"].size(),bap[0]["Bridges"].size(),diam,layout_e_t-layout_b_t,dist_e_t-dist_b_t,bap_e_t-bap_b_t,nodes_e_t-nodes_b_t]
+		#print(line)
+		output.store_line(line)
+		$FloorArchitect.cells.clear()
 	get_tree().quit()
 	
 

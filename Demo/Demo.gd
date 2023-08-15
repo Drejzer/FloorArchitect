@@ -54,9 +54,10 @@ func genmap():
 func _on_BaseFloorArchitect_FloorPlanned() -> void:
 	await get_tree().process_frame
 	for i in $FloorArchitect.cells:
-			var x=CellScene.instantiate()
-			x.size_x=64
-			x.size_y=64
-			x.setup($FloorArchitect.cells[i])
-			$map.add_child(x,true)
+		await get_tree().process_frame
+		var x=CellScene.instantiate()
+		x.size_x=64
+		x.size_y=64
+		x.setup($FloorArchitect.cells[i])
+		$map.add_child(x,true)
 	pass
