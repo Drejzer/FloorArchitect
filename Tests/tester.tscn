@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddpf77yhau6f6"]
 
 [ext_resource type="Script" path="res://Tests/tester.gd" id="1_xc2vj"]
-[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/LoopErasingWalkerFloorArchitect.gd" id="2_vj4jp"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SelfAvoidingWalkerFloorArchitect.gd" id="2_piq2y"]
 
 [node name="Tester" type="Node2D"]
 script = ExtResource("1_xc2vj")
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("2_vj4jp")
+script = ExtResource("2_piq2y")
 main_path_length = 50
 sideroom_count = 50
 

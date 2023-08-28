@@ -17,7 +17,7 @@ var bap_b_t
 var bap_e_t
 var diam=0
 
-var output:=FileAccess.open("res://Tests/data/log_LEWFA_50-50_"+Time.get_datetime_string_from_system()+".csv",FileAccess.WRITE)
+var output:=FileAccess.open("res://Tests/data/SAWFA_50-20.csv",FileAccess.WRITE)
 # 10-25-50-100
 func _ready() -> void:
 	seed(291943)
@@ -30,7 +30,7 @@ func _ready() -> void:
 		$FloorArchitect.setup(Seed)
 		layout_b_t=Time.get_ticks_usec()
 		$FloorArchitect._plan_floor()
-		line="%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;LoopErasingWalker"%[Seed,$FloorArchitect.main_path_length+$FloorArchitect.sideroom_count,nodes["Leaves"].size(),nodes["3Cross"].size(),nodes["4Cross"].size(),bap[0]["ArticulationPoints"].size(),bap[0]["Bridges"].size(),diam,layout_e_t-layout_b_t,dist_e_t-dist_b_t,bap_e_t-bap_b_t,nodes_e_t-nodes_b_t]
+		line="%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;SelfAvoidingWalker"%[Seed,$FloorArchitect.main_path_length+$FloorArchitect.sideroom_count,nodes["Leaves"].size(),nodes["3Cross"].size(),nodes["4Cross"].size(),bap[0]["ArticulationPoints"].size(),bap[0]["Bridges"].size(),diam,layout_e_t-layout_b_t,dist_e_t-dist_b_t,bap_e_t-bap_b_t,nodes_e_t-nodes_b_t]
 		#print(line)
 		output.store_line(line)
 		$FloorArchitect.cells.clear()
