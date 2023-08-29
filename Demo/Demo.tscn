@@ -19,12 +19,19 @@ CellScene = ExtResource("2_b774e")
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, 1)
 
-[node name="RGFloorArchitect" type="Node" parent="."]
-script = ExtResource("3_414e6")
-minimum_room_count = 500
-maximum_room_count = 500
-
 [node name="FloorArchitect" type="Node" parent="."]
+script = ExtResource("3_414e6")
+minimum_room_count = 25
+maximum_room_count = 25
+passage_weigths = {
+"CONNECTION": 0,
+"HIDDEN": 0,
+"LOCKED": 0,
+"NONE": 3,
+"NORMAL": 3
+}
+
+[node name="SAWFloorArchitect" type="Node" parent="."]
 script = ExtResource("4_o28ov")
 main_path_length = 40
 sideroom_count = 60
@@ -55,8 +62,8 @@ sample_size = 25
 script = ExtResource("9_6n1wv")
 sample_size = 25
 
-[connection signal="floor_planned" from="RGFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
+[connection signal="floor_planned" from="SAWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="LEWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="SWSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="RKSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]

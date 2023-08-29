@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://brudtxrty50la"]
+
+[ext_resource type="Script" path="res://Tests/tester_3.gd" id="1_cal1g"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/LoopErasingWalkerFloorArchitect.gd" id="1_lx1fa"]
+
+[node name="Tester" type="Node2D"]
+script = ExtResource("1_cal1g")
+
+[node name="LoopErasingWalkerFloorArchitect" type="Node" parent="."]
+script = ExtResource("1_lx1fa")

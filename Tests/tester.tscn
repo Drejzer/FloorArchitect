@@ -1,14 +1,21 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddpf77yhau6f6"]
 
 [ext_resource type="Script" path="res://Tests/tester.gd" id="1_xc2vj"]
-[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SelfAvoidingWalkerFloorArchitect.gd" id="2_piq2y"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomGrowerFloorArchitect.gd" id="2_vjwe7"]
 
 [node name="Tester" type="Node2D"]
 script = ExtResource("1_xc2vj")
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("2_piq2y")
-main_path_length = 50
-sideroom_count = 50
+script = ExtResource("2_vjwe7")
+minimum_room_count = 100
+maximum_room_count = 100
+passage_weigths = {
+"CONNECTION": 0,
+"HIDDEN": 0,
+"LOCKED": 0,
+"NONE": 8,
+"NORMAL": 9
+}
 
 [connection signal="floor_planned" from="FloorArchitect" to="." method="_on_floor_architect_floor_planned"]
