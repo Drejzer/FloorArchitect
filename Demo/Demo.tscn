@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bpmrfjkjk355r"]
+[gd_scene load_steps=11 format=3 uid="uid://bpmrfjkjk355r"]
 
 [ext_resource type="Script" path="res://Demo/Demo.gd" id="1_v5cpr"]
 [ext_resource type="PackedScene" uid="uid://crw1xqhqj0g50" path="res://Demo/Cell/Cell.tscn" id="2_b774e"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomKruskalSamplerFloorArchitect.gd" id="7_v815n"]
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RecursiveBacktrackerSamplerFloorArchitect.gd" id="8_5birp"]
 [ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RecursiveDividerSamplerFloorArchitect.gd" id="9_6n1wv"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/PlaceAndConnectFloorArchitect.gd" id="10_8al48"]
 
 [node name="Demo" type="Node2D"]
 script = ExtResource("1_v5cpr")
@@ -19,7 +20,7 @@ CellScene = ExtResource("2_b774e")
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, 1)
 
-[node name="FloorArchitect" type="Node" parent="."]
+[node name="RGFloorArchitect" type="Node" parent="."]
 script = ExtResource("3_414e6")
 minimum_room_count = 25
 maximum_room_count = 25
@@ -62,10 +63,16 @@ sample_size = 25
 script = ExtResource("9_6n1wv")
 sample_size = 25
 
-[connection signal="floor_planned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
+[node name="FloorArchitect" type="Node" parent="."]
+script = ExtResource("10_8al48")
+room_count = 25
+additional_passages = 5
+
+[connection signal="floor_planned" from="RGFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="SAWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="LEWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="SWSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="RKSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="RBSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="RDSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
+[connection signal="floor_planned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
