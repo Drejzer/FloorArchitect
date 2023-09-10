@@ -8,14 +8,14 @@ script = ExtResource("1_xc2vj")
 
 [node name="FloorArchitect" type="Node" parent="."]
 script = ExtResource("2_vjwe7")
-minimum_room_count = 100
-maximum_room_count = 100
+minimum_room_count = 25
+maximum_room_count = 25
 passage_weigths = {
 "CONNECTION": 0,
 "HIDDEN": 0,
 "LOCKED": 0,
-"NONE": 8,
-"NORMAL": 9
+"NONE": 5,
+"NORMAL": 5
 }
 
 [connection signal="floor_planned" from="FloorArchitect" to="." method="_on_floor_architect_floor_planned"]
