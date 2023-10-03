@@ -42,7 +42,7 @@ func _plan_floor()->void:
 			walkers=nv.duplicate(true)
 			to_erase.clear() 
 		if rand.randf()<additional_walker_chance:
-			walkers.append([cells.keys()[rand.randi_range(0,cells.keys().size()-1)],Vector2i.ZERO,additional_walker_lifespan if additional_walker_lifespan!=-1 else null,true])
+			walkers.append([cells.keys()[rand.randi_range(0,cells.keys().size()-1)] if cells.size()>0 else Vector2i.ZERO,Vector2i.ZERO,additional_walker_lifespan if additional_walker_lifespan!=-1 else null,true])
 		for i in walkers.size():
 			if cells.size() < room_count:
 				if !(walkers[i][0] in cells.keys()):
