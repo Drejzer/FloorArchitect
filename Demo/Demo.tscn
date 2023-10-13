@@ -25,8 +25,6 @@ position = Vector2(0, 1)
 script = ExtResource("3_414e6")
 minimum_room_count = 500
 maximum_room_count = 500
-passage_weigths = null
-cells = null
 
 [node name="SAWFloorArchitect" type="Node" parent="."]
 script = ExtResource("4_o28ov")
@@ -53,7 +51,6 @@ sample_size = 25
 
 [node name="RKSFloorArchitect" type="Node" parent="."]
 script = ExtResource("7_v815n")
-braid_treshold = 1.0
 sample_size = 25
 
 [node name="RBSFloorArchitect" type="Node" parent="."]
@@ -72,8 +69,15 @@ additional_passages = 5
 
 [node name="FloorArchitect" type="Node" parent="."]
 script = ExtResource("11_mwnws")
-walker_count = 2
-walker_lifespan = 3
+continuation_bias = 50
+additional_walker_chance = 3.0
+additional_walker_lifespan = 100
+direction_weigths = {
+Vector2i(-1, 0): 100,
+Vector2i(0, -1): 100,
+Vector2i(0, 1): 100,
+Vector2i(1, 0): 100
+}
 
 [connection signal="floor_planned" from="RGFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="SAWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]

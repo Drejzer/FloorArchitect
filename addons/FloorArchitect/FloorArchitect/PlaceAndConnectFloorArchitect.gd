@@ -23,7 +23,7 @@ func _place_rooms()->void:
 			var nc=Utils.create_template_cell(p)
 			cells[p]=nc
 			for ps in nc.passages.keys():
-				#if !cells.has(p+ps):
+				if !cells.has(p+ps):
 					pot_places.push_back(p+ps)
 	
 func _connect_rooms()->void:

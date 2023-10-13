@@ -48,7 +48,7 @@ func sample_floor()->void:
 				nextcells.push_back(pos+p)
 	pass
 
-## Virtual function for generating the maze that will be used to sample floor layouts.
+## "Virtual" function for generating the maze that will be used to sample floor layouts.
 ## Should be implemented in derived classes.
 func _generate_maze()->void:
 	pass

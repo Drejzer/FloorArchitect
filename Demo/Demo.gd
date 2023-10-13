@@ -57,6 +57,8 @@ func _on_BaseFloorArchitect_FloorPlanned() -> void:
 			var x=CellScene.instantiate()
 			x.size_x=64
 			x.size_y=64
+			await get_tree().process_frame
 			x.setup($FloorArchitect.cells[i])
 			$map.add_child(x,true)
+			await get_tree().process_frame
 	pass
