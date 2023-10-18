@@ -1,11 +1,15 @@
 ## Floor architect that first generates a maze using Prim's Algorithm and then samples a subset of rooms from it multiple times
 class_name RandomKruskalSamplerFloorArchitect extends BaseSamplerFloorArchitect
 
+@export var additional_passages:int=0
+
 ## Geerates the maze that will be used to sample floor layouts.
 func _generate_maze()->void:
 	var cells_by_set:={}
 	var set_by_cell:={}
 	var pairs:=[]
+	var loops:=[]
+	
 	var merge:=func(a,b):
 		var sb=set_by_cell[b]
 		var sa=set_by_cell[a]
@@ -23,6 +27,8 @@ func _generate_maze()->void:
 			cells_by_set.erase(sb)
 			potential_cells[b].passages[a-b]=Utils.PassageType.NORMAL
 			potential_cells[a].passages[b-a]=Utils.PassageType.NORMAL
+		else :
+			loops.push_back([a,b])
 	for y in range(maze_height):
 		for x in range(maze_width):
 			var nc:=Utils.create_template_cell(Vector2i(x,y),true)
@@ -36,6 +42,12 @@ func _generate_maze()->void:
 	while cells_by_set.size()>1:
 		var p:=pairs.pop_at(rand.randi_range(0,pairs.size()-1))
 		merge.call(p[0],p[1])
+	loops+=pairs
+	for _i in range(additional_passages):
+		if !loops.is_empty():
+			var p:=loops.pop_at(rand.randi_range(0,loops.size()-1))
+			cells[p[0]].passages[p[1]-p[0]]=Utils.PassageType.NORMAL
+			cells[p[1]].passages[p[0]-p[1]]=Utils.PassageType.NORMAL
 
 
 func setup(rseed:int=1337)->void:
