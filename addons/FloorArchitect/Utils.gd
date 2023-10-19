@@ -83,9 +83,9 @@ static func get_leaves_and_crossroads(map:Dictionary)->Dictionary:
 		elif c==2:
 			leaves["Connectors"][r]=true
 		elif c==3:
-			leaves["Cross3"][r]=true
+			leaves["3Cross"][r]=true
 		elif c==4:
-			leaves["Cross4"][r]=true
+			leaves["4Cross"][r]=true
 	return leaves
 
 ## Generates and returns a dictionaryconsisting of a dictionaryholding distances between cells, and a dictionary of "itnermediate steps" between cells
