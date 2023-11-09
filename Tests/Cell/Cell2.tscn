@@ -1,0 +1,89 @@
+[gd_scene load_steps=14 format=3 uid="uid://cj0rckd8nresh"]
+
+[ext_resource type="Script" path="res://Tests/Cell/Cell2.gd" id="1_2j8tk"]
+
+[sub_resource type="Gradient" id="Gradient_nxd0x"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.360784, 0.360784, 0.360784, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_oaj7c"]
+gradient = SubResource("Gradient_nxd0x")
+width = 16
+height = 16
+
+[sub_resource type="Gradient" id="Gradient_7egj1"]
+offsets = PackedFloat32Array(0.760479, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kvuxd"]
+gradient = SubResource("Gradient_7egj1")
+width = 8
+height = 2
+use_hdr = true
+
+[sub_resource type="Gradient" id="Gradient_2wqyf"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_jogq7"]
+gradient = SubResource("Gradient_2wqyf")
+width = 8
+height = 2
+use_hdr = true
+
+[sub_resource type="Gradient" id="Gradient_bih54"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_8rjhc"]
+gradient = SubResource("Gradient_bih54")
+width = 2
+height = 8
+use_hdr = true
+
+[sub_resource type="Gradient" id="Gradient_nbnv4"]
+offsets = PackedFloat32Array(0.60479)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ox2d2"]
+gradient = SubResource("Gradient_nbnv4")
+width = 2
+height = 8
+use_hdr = true
+
+[sub_resource type="Gradient" id="Gradient_sg36r"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6grfq"]
+gradient = SubResource("Gradient_sg36r")
+width = 6
+height = 6
+
+[node name="Cell" type="Node2D"]
+script = ExtResource("1_2j8tk")
+
+[node name="ContentImage" type="Sprite2D" parent="."]
+texture = SubResource("GradientTexture2D_oaj7c")
+
+[node name="Passages" type="Node2D" parent="."]
+
+[node name="PE" type="Sprite2D" parent="Passages"]
+position = Vector2(4, 0)
+texture = SubResource("GradientTexture2D_kvuxd")
+
+[node name="PW" type="Sprite2D" parent="Passages"]
+position = Vector2(-4, 0)
+texture = SubResource("GradientTexture2D_jogq7")
+
+[node name="PN" type="Sprite2D" parent="Passages"]
+position = Vector2(0, -4)
+texture = SubResource("GradientTexture2D_8rjhc")
+
+[node name="PS" type="Sprite2D" parent="Passages"]
+position = Vector2(0, 4)
+texture = SubResource("GradientTexture2D_ox2d2")
+
+[node name="CellImage" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+texture = SubResource("GradientTexture2D_6grfq")

@@ -30,6 +30,8 @@ func sample_floor()->void:
 		var x:=rand.randi_range(0,maze_width-1)
 		var y:=rand.randi_range(0,maze_height-1)
 		init_pos=Vector2i(x,y)
+	else:
+		init_pos=initial_position
 	nextcells.push_back(init_pos)
 	while cells.size()<sample_size:
 		if nextcells.is_empty():
@@ -38,7 +40,7 @@ func sample_floor()->void:
 		var pos=(nextcells.pop_front() if sampling_mode == "Wide" 
 				else nextcells.pop_back() if sampling_mode=="Deep" 
 				else nextcells.pop_at(rand.randi()%nextcells.size()))
-		cells[pos-init_pos]=potential_cells[pos].duplicate()
+		cells[pos-init_pos]=potential_cells[pos].duplicate(true)
 		cells[pos-init_pos].map_pos-=init_pos
 		for p in cells[pos-init_pos].passages.keys():
 			if (!cells.has(pos-init_pos+p)

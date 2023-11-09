@@ -10,7 +10,7 @@ class_name RandomWalkerFloorArchitect extends BaseFloorArchitect
 @export var continuation_bias:int=0
 @export var allow_loops:=false
 
-@export var additional_walker_chance:float=0.0
+@export_range(0.0,1.0) var additional_walker_chance:float=0.0
 @export var additional_walker_lifespan:int=5
 
 ## Direction bias
