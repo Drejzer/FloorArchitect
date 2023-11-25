@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var CellScene:PackedScene
-@export var architect_seed:=123134
+@export var architect_seed:=2343772919 #123321
 
 var gen=false
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Tests/tester.gd" id="1_xc2vj"]
 [ext_resource type="PackedScene" uid="uid://cj0rckd8nresh" path="res://Tests/Cell/Cell2.tscn" id="2_858gi"]
-[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomWalkerFloorArchitect.gd" id="2_ipmu5"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SelfAvoidingWalkerFloorArchitect.gd" id="3_5x537"]
 
 [node name="Tester" type="Node2D"]
 script = ExtResource("1_xc2vj")
@@ -13,6 +13,4 @@ CellScene = ExtResource("2_858gi")
 [node name="map" type="Node2D" parent="."]
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("2_ipmu5")
-room_count = 25
-allow_loops = true
+script = ExtResource("3_5x537")
