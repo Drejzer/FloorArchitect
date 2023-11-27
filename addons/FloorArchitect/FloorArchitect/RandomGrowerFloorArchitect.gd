@@ -17,10 +17,8 @@ func _plan_floor()->void:
 		if !potential_cells.is_empty():
 			var nextc=get_next_cell()
 			realise_cell(nextc)
-		while potential_cells.is_empty():
+		while potential_cells.is_empty() and cells.size()<minimum_room_count:
 			enforce_minimum()
-			if cells.size()>=minimum_room_count:
-				break
 	super()
 
 ## Picks next cell to be added from [member potential_cells]
