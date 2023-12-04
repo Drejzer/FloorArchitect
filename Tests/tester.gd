@@ -25,8 +25,8 @@ var mmdmp=0
 var maze_b_t
 var maze_e_t
 
-const alg = "SelfAvoidingWalker_07mpl03src_0cb"
-const rcnt = 100
+const alg = "RecursiveDividerSampler_1ppd_0apc_roofsqrt_random_center"
+const rcnt = 10
 var cell_heat:={}
 var pass_heat:={}
 var output:=FileAccess.open("res://Tests/data/"+var_to_str(rcnt)+alg+".csv",FileAccess.WRITE)
@@ -48,7 +48,7 @@ func _ready() -> void:
 			pass_heat[p][Utils.WEST]=0
 		
 	$FloorArchitect.setup(Seed)
-	var line:="Seed;RoomCount;LeafCount;ConnectorCount;3CrossCount;4CrossCount;APCount;BridgeCount;Diameter;GenTime;DistTime;BAPTime;NodeTime;Algorithm;AvgDistToMPth;MaxDistToMPth;MPthLen"#;MazeTime"
+	var line:="Seed;RoomCount;LeafCount;ConnectorCount;3CrossCount;4CrossCount;APCount;BridgeCount;Diameter;GenTime;DistTime;BAPTime;NodeTime;Algorithm;AvgDistToMPth;MaxDistToMPth;MPthLen;MazeTime"
 	output.store_line(line)
 	for _j in range(5000):
 		Seed=randi()
@@ -57,7 +57,7 @@ func _ready() -> void:
 		maze_e_t= Time.get_ticks_usec()
 		layout_b_t=Time.get_ticks_usec()
 		$FloorArchitect._plan_floor()
-		line="%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%s;%f;%d;%d"%[Seed,rcnt,nodes["Leaves"].size(),nodes["Connectors"].size(),nodes["3Cross"].size(),nodes["4Cross"].size(),bap[0]["ArticulationPoints"].size(),bap[0]["Bridges"].size(),diam,layout_e_t-layout_b_t,dist_e_t-dist_b_t,bap_e_t-bap_b_t,nodes_e_t-nodes_b_t,alg,admp,mmdmp,mpl]#,maze_e_t-maze_b_t]
+		line="%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%s;%f;%d;%d;%d"%[Seed,rcnt,nodes["Leaves"].size(),nodes["Connectors"].size(),nodes["3Cross"].size(),nodes["4Cross"].size(),bap[0]["ArticulationPoints"].size(),bap[0]["Bridges"].size(),diam,layout_e_t-layout_b_t,dist_e_t-dist_b_t,bap_e_t-bap_b_t,nodes_e_t-nodes_b_t,alg,admp,mmdmp,mpl,maze_e_t-maze_b_t]
 		output.store_line(line)
 		for c in $FloorArchitect.cells:
 			cell_heat[c]+=1
@@ -81,7 +81,7 @@ func _ready() -> void:
 		x.setup([i,cell_heat[i]],pass_heat[i])
 		$map.add_child(x,true)
 	pass
-	get_tree().quit()
+	#get_tree().quit()
 	
 
 func _process(delta: float) -> void:
@@ -105,6 +105,7 @@ func _on_floor_architect_floor_planned() -> void:
 	mpl=0
 	admp=0
 	mmdmp=0
+	diam=0
 	
 	mpe=null
 	for i in nodes["Leaves"]:

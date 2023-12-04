@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Tests/tester.gd" id="1_xc2vj"]
 [ext_resource type="PackedScene" uid="uid://cj0rckd8nresh" path="res://Tests/Cell/Cell2.tscn" id="2_858gi"]
-[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SelfAvoidingWalkerFloorArchitect.gd" id="3_5x537"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RecursiveDividerSamplerFloorArchitect.gd" id="3_vcn5f"]
 
 [node name="Tester" type="Node2D"]
 script = ExtResource("1_xc2vj")
@@ -13,4 +13,11 @@ CellScene = ExtResource("2_858gi")
 [node name="map" type="Node2D" parent="."]
 
 [node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("3_5x537")
+script = ExtResource("3_vcn5f")
+maze_width = 7
+maze_height = 7
+sample_size = 10
+initial_position = Vector2i(3, 3)
+passage_weigths = null
+
+[connection signal="floor_planned" from="FloorArchitect" to="." method="_on_floor_architect_floor_planned"]
