@@ -6,6 +6,13 @@ class_name RandomGrowerFloorArchitect extends BaseFloorArchitect
 
 @export var minimum_room_count:int=9
 @export var maximum_room_count:int=17
+@export var passage_weigths:={"NONE":3,
+			"NORMAL":5,
+			"HIDDEN":0,
+			"LOCKED":0,
+			"CONNECTION":0,
+			}
+
 
 ## Function that generates the floor layout
 func _plan_floor()->void:
