@@ -6,13 +6,6 @@ class_name BaseFloorArchitect extends Node
 var rand:=RandomNumberGenerator.new()
 
 signal floor_planned
-@export var passage_weigths:={"NONE":3,
-			"NORMAL":5,
-			"HIDDEN":0,
-			"LOCKED":0,
-			"CONNECTION":0,
-			}
-			
 
 ## Dictionary of cells (using [CellData]) keyed by position (using [Vector2i])
 @export var cells: Dictionary={}
