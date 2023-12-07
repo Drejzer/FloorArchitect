@@ -14,7 +14,7 @@ var potential_cells:Dictionary={}
 
 ## Function that generates the floor layout, should be overloaded for each implementation.[br]
 ## Base implementation should be called at the end.
-func _plan_floor()->void:
+func plan_floor()->void:
 	clean_invalid_passages()
 	floor_planned.emit()
 

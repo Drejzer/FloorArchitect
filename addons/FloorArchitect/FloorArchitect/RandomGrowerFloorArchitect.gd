@@ -15,7 +15,7 @@ class_name RandomGrowerFloorArchitect extends BaseFloorArchitect
 
 
 ## Function that generates the floor layout
-func _plan_floor()->void:
+func plan_floor()->void:
 	cells.clear()
 	potential_cells.clear()
 	var init = Utils.create_template_cell()

@@ -9,7 +9,7 @@ class_name PlaceAndConnectFloorArchitect extends BaseFloorArchitect
 @export var additional_passages:int=0
 
 ## Function that generates the floor layout
-func _plan_floor()->void:
+func plan_floor()->void:
 	cells.clear()
 	_place_rooms()
 	_connect_rooms()

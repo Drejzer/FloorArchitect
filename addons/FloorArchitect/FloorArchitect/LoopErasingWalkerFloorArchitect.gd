@@ -16,7 +16,7 @@ var _path:=[]
 			Vector2i(-1,0):4}
 			
 ## Function that generates the floor layout
-func _plan_floor()->void:
+func plan_floor()->void:
 	cells.clear()
 	potential_cells.clear()
 	_walk()
