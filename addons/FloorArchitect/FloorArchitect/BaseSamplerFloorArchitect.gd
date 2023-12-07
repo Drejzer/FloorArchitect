@@ -18,7 +18,7 @@ class_name BaseSamplerFloorArchitect extends BaseFloorArchitect
 @export var initial_position:Vector2i=Vector2i(-1,-1)
 @export_enum("Random","Deep","Wide") var sampling_mode:String="Random"
 
-func _plan_floor()->void:
+func plan_floor()->void:
 	sample_floor()
 	super()
 

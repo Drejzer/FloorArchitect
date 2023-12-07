@@ -19,7 +19,7 @@ class_name SelfAvoidingWalkerFloorArchitect extends BaseFloorArchitect
 var _path:=[]
 
 ## Function that generates the floor layout
-func _plan_floor()->void:
+func plan_floor()->void:
 	cells.clear()
 	potential_cells.clear()
 	_walk()

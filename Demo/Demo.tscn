@@ -37,18 +37,23 @@ passage_weigths = {
 "NONE": 5,
 "NORMAL": 5
 }
+cells = null
 
 [node name="SAWFloorArchitect" type="Node" parent="."]
 script = ExtResource("4_o28ov")
 main_path_length = 0
 sideroom_count = 10
-passage_weigths = null
+continuation_bias = null
+direction_weigths = null
+cells = null
 
 [node name="LEWFloorArchitect" type="Node" parent="."]
 script = ExtResource("5_sq6e2")
 main_path_length = 70
 sideroom_count = 30
-passage_weigths = null
+continuation_bias = null
+direction_weigths = null
+cells = null
 
 [node name="SWSFloorArchitect" type="Node" parent="."]
 script = ExtResource("6_gdw30")
@@ -83,8 +88,13 @@ passage_weigths = null
 script = ExtResource("11_mwnws")
 room_count = 25
 walker_count = 4
+walker_lifespan = null
+continuation_bias = null
 allow_loops = true
-passage_weigths = null
+additional_walker_chance = null
+additional_walker_lifespan = null
+direction_weigths = null
+cells = null
 
 [node name="00marker" type="Sprite2D" parent="."]
 top_level = true

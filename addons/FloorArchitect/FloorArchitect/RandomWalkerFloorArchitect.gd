@@ -22,7 +22,7 @@ class_name RandomWalkerFloorArchitect extends BaseFloorArchitect
 
 
 ## Function that generates the floor layout
-func _plan_floor()->void:
+func plan_floor()->void:
 	var walkers:=[]
 	cells.clear()
 	potential_cells.clear()

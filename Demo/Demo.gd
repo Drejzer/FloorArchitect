@@ -47,7 +47,7 @@ func genmap():
 	var m=Node2D.new()
 	m.name="map"
 	add_child(m,true)
-	$FloorArchitect._plan_floor()
+	$FloorArchitect.plan_floor()
 	gen=true
 	
 
