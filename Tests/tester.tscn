@@ -18,6 +18,5 @@ maze_width = 7
 maze_height = 7
 sample_size = 10
 initial_position = Vector2i(3, 3)
-passage_weigths = null
 
 [connection signal="floor_planned" from="FloorArchitect" to="." method="_on_floor_architect_floor_planned"]

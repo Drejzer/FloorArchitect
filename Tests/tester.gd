@@ -56,7 +56,7 @@ func _ready() -> void:
 		$FloorArchitect.setup(Seed)
 		maze_e_t= Time.get_ticks_usec()
 		layout_b_t=Time.get_ticks_usec()
-		$FloorArchitect._plan_floor()
+		$FloorArchitect.plan_floor()
 		line="%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%s;%f;%d;%d;%d"%[Seed,rcnt,nodes["Leaves"].size(),nodes["Connectors"].size(),nodes["3Cross"].size(),nodes["4Cross"].size(),bap[0]["ArticulationPoints"].size(),bap[0]["Bridges"].size(),diam,layout_e_t-layout_b_t,dist_e_t-dist_b_t,bap_e_t-bap_b_t,nodes_e_t-nodes_b_t,alg,admp,mmdmp,mpl,maze_e_t-maze_b_t]
 		output.store_line(line)
 		for c in $FloorArchitect.cells:
