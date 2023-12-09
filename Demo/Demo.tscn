@@ -32,7 +32,6 @@ passage_weigths = {
 "NONE": 5,
 "NORMAL": 5
 }
-cells = null
 
 [node name="SAWFloorArchitect" type="Node" parent="."]
 script = ExtResource("4_o28ov")

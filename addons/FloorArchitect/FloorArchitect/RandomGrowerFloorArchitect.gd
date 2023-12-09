@@ -22,14 +22,14 @@ func plan_floor()->void:
 	potential_cells[init.map_pos]=init
 	while cells.size() < maximum_room_count and !potential_cells.is_empty():
 		if !potential_cells.is_empty():
-			var nextc=get_next_cell()
-			realise_cell(nextc)
+			var nextc=_get_next_cell()
+			_realise_cell(nextc)
 		while potential_cells.is_empty() and cells.size()<minimum_room_count:
 			enforce_minimum()
 	super()
 
 ## Picks next cell to be added from [member potential_cells]
-func get_next_cell()->CellData:
+func _get_next_cell()->CellData:
 	var k=potential_cells.keys()
 	var i=rand.randi_range(0,k.size()-1)
 	return potential_cells[k[i]]
@@ -38,7 +38,7 @@ func get_next_cell()->CellData:
 ##
 ## Removes the selected cell from [member potential_cells], randomises it's passages while respecting existing cells, and adds it to [member cells]. 
 ## Additionally adds to [member potential_cells] according to the now defined passages
-func realise_cell(nc:CellData):
+func _realise_cell(nc:CellData):
 	var psgs=define_passages(passage_weigths,nc.passages)
 	nc.passages=psgs
 	if !cells.has(nc.map_pos+Utils.NORTH):
