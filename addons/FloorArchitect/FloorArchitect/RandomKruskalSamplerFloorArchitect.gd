@@ -48,10 +48,3 @@ func _generate_maze()->void:
 			var p:=loops.pop_at(rand.randi_range(0,loops.size()-1))
 			cells[p[0]].passages[p[1]-p[0]]=Utils.PassageType.NORMAL
 			cells[p[1]].passages[p[0]-p[1]]=Utils.PassageType.NORMAL
-
-
-func setup(rseed:int=1337)->void:
-	super(rseed)
-	_generate_maze()
-	braid_maze()
-	pass
