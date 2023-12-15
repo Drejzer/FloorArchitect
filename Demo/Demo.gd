@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var CellScene:PackedScene
-@export var architect_seed:=1027340011 #2343772919 #123321
+@export var architect_seed:= 12321#69414573 #1027340011 #2343772919# #3211584149   
 
 var gen=false
 
@@ -18,9 +18,12 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_released("test"):
 		genmap()
 	elif Input.is_action_just_released("test2"):
-		genmap()
+		for c in $map.get_children().duplicate():
+			c.free()
+		$FloorArchitect.cells.clear()
 		$FloorArchitect.cells=$FloorArchitect.potential_cells.duplicate(true)
 		_on_BaseFloorArchitect_FloorPlanned()
+		gen=true
 	elif Input.is_action_just_released("display_AP"):
 		if gen:
 			briges_and_aps=Utils.get_bridges_and_articulation_points($FloorArchitect.cells)

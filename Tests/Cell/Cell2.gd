@@ -24,15 +24,15 @@ func set_color():
 	if weigth<=0:
 		$CellImage.modulate = Color(0,0,0,0)
 	elif weigth<1000:
-		var ci := clampf((weigth*2.0)/1000.0,0.00,1)
+		var ci := clampf((weigth*1.0)/1000.0,0.00,1)
 		$CellImage.modulate = Color(0,ci,0.275,1)
 		#Color(ci,ci,ci,1)
 	elif weigth<3000:
-		var ci := clampf(((weigth-1000)*2.0)/2000.0,0,1)
+		var ci := clampf(((weigth-1000)*1.0)/2000.0,0,1)
 		$CellImage.modulate = Color(ci,1,0.275,1)
 		#Color(1,1,1-ci,1)
 	else:
-		var ci := clampf(((weigth-3000)*2.0)/2000.0,0,1)
+		var ci := clampf(((weigth-3000)*1.0)/2000.0,0,1)
 		$CellImage.modulate = Color(1,1-ci,0.275,1)
 		#Color(1,1-ci,0,1)
 		

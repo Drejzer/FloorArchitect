@@ -1,8 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://ddpf77yhau6f6"]
+[gd_scene load_steps=12 format=3 uid="uid://ddpf77yhau6f6"]
 
 [ext_resource type="Script" path="res://Tests/tester.gd" id="1_xc2vj"]
 [ext_resource type="PackedScene" uid="uid://cj0rckd8nresh" path="res://Tests/Cell/Cell2.tscn" id="2_858gi"]
-[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RecursiveDividerSamplerFloorArchitect.gd" id="3_vcn5f"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomGrowerFloorArchitect.gd" id="3_oqynf"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/PlaceAndConnectFloorArchitect.gd" id="4_df65e"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomWalkerFloorArchitect.gd" id="5_kkvu4"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SelfAvoidingWalkerFloorArchitect.gd" id="6_cruq7"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/LoopErasingWalkerFloorArchitect.gd" id="7_da15e"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/SidewinderSamplerFloorArchitect.gd" id="8_luph2"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RandomKruskalSamplerFloorArchitect.gd" id="9_muy43"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RecursiveBacktrackerSamplerFloorArchitect.gd" id="10_xji78"]
+[ext_resource type="Script" path="res://addons/FloorArchitect/FloorArchitect/RecursiveDividerSamplerFloorArchitect.gd" id="11_ylkly"]
 
 [node name="Tester" type="Node2D"]
 script = ExtResource("1_xc2vj")
@@ -12,11 +20,68 @@ CellScene = ExtResource("2_858gi")
 
 [node name="map" type="Node2D" parent="."]
 
-[node name="FloorArchitect" type="Node" parent="."]
-script = ExtResource("3_vcn5f")
-maze_width = 7
-maze_height = 7
-sample_size = 10
-initial_position = Vector2i(3, 3)
+[node name="RGFloorArchitect" type="Node" parent="."]
+script = ExtResource("3_oqynf")
+minimum_room_count = 25
+maximum_room_count = 25
+passage_weigths = {
+"CONNECTION": 0,
+"HIDDEN": 0,
+"LOCKED": 0,
+"NONE": 7,
+"NORMAL": 3
+}
 
+[node name="PACFloorArchitect" type="Node" parent="."]
+script = ExtResource("4_df65e")
+room_count = 50
+
+[node name="RWFloorArchitect" type="Node" parent="."]
+script = ExtResource("5_kkvu4")
+room_count = 25
+continuation_bias = 4
+allow_loops = true
+
+[node name="SAWFloorArchitect" type="Node" parent="."]
+script = ExtResource("6_cruq7")
+main_path_length = 18
+sideroom_count = 7
+
+[node name="LEWFloorArchitect" type="Node" parent="."]
+script = ExtResource("7_da15e")
+main_path_length = 7
+
+[node name="SWSFloorArchitect" type="Node" parent="."]
+script = ExtResource("8_luph2")
+maze_width = 11
+maze_height = 11
+braid_treshold = 1.0
+sample_size = 25
+initial_position = Vector2i(5, 5)
+
+[node name="FloorArchitect" type="Node" parent="."]
+script = ExtResource("9_muy43")
+maze_width = 21
+maze_height = 21
+sample_size = 100
+initial_position = Vector2i(10, 10)
+
+[node name="RBSFloorArchitect" type="Node" parent="."]
+script = ExtResource("10_xji78")
+maze_width = 11
+maze_height = 11
+braid_treshold = 1.0
+sample_size = 25
+initial_position = Vector2i(5, 5)
+
+[node name="RDSFloorArchitect" type="Node" parent="."]
+script = ExtResource("11_ylkly")
+additional_passage_chance = 1.0
+maze_width = 11
+maze_height = 11
+sample_size = 25
+initial_position = Vector2i(5, 5)
+
+[connection signal="floor_planned" from="PACFloorArchitect" to="." method="_on_floor_architect_floor_planned"]
+[connection signal="floor_planned" from="LEWFloorArchitect" to="." method="_on_floor_architect_floor_planned"]
 [connection signal="floor_planned" from="FloorArchitect" to="." method="_on_floor_architect_floor_planned"]

@@ -26,10 +26,10 @@ CellScene = ExtResource("2_b774e")
 position = Vector2(0, 1)
 zoom = Vector2(0.875, 0.875)
 
-[node name="FloorArchitect" type="Node" parent="."]
+[node name="RGFloorArchitect" type="Node" parent="."]
 script = ExtResource("3_414e6")
-minimum_room_count = 10
-maximum_room_count = 10
+minimum_room_count = 1
+maximum_room_count = 100
 passage_weigths = {
 "CONNECTION": 0,
 "HIDDEN": 0,
@@ -40,48 +40,54 @@ passage_weigths = {
 
 [node name="SAWFloorArchitect" type="Node" parent="."]
 script = ExtResource("4_o28ov")
-main_path_length = 0
-sideroom_count = 10
+main_path_length = 18
+sideroom_count = 7
 continuation_bias = null
 direction_weigths = null
 cells = null
 
 [node name="LEWFloorArchitect" type="Node" parent="."]
 script = ExtResource("5_sq6e2")
-main_path_length = 70
-sideroom_count = 30
+main_path_length = 18
+sideroom_count = 7
 continuation_bias = null
 direction_weigths = null
 cells = null
 
 [node name="SWSFloorArchitect" type="Node" parent="."]
 script = ExtResource("6_gdw30")
-maze_width = 13
-maze_height = 13
+maze_width = 11
+maze_height = 11
 sample_size = 25
-passage_weigths = null
+initial_position = Vector2i(5, 5)
 
 [node name="RKSFloorArchitect" type="Node" parent="."]
 script = ExtResource("7_v815n")
+maze_width = 11
+maze_height = 11
 sample_size = 25
-passage_weigths = null
+initial_position = Vector2i(5, 5)
 
 [node name="RBSFloorArchitect" type="Node" parent="."]
 script = ExtResource("8_5birp")
-braid_treshold = 0.98
+maze_width = 11
+maze_height = 11
+braid_treshold = 1.0
 sample_size = 25
-passage_weigths = null
+initial_position = Vector2i(5, 5)
 
-[node name="RDSFloorArchitect" type="Node" parent="."]
+[node name="FloorArchitect" type="Node" parent="."]
 script = ExtResource("9_6n1wv")
+maze_width = 11
+maze_height = 11
+braid_treshold = 1.0
 sample_size = 25
-passage_weigths = null
+initial_position = Vector2i(5, 5)
 
 [node name="PACFloorArchitect" type="Node" parent="."]
 script = ExtResource("10_8al48")
 room_count = 25
 additional_passages = 5
-passage_weigths = null
 
 [node name="RWFloorArchitect" type="Node" parent="."]
 script = ExtResource("11_mwnws")
@@ -102,12 +108,12 @@ rotation = -0.698132
 scale = Vector2(1.25, 1.25)
 texture = ExtResource("12_sf06y")
 
-[connection signal="floor_planned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
+[connection signal="floor_planned" from="RGFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="SAWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="LEWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="SWSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="RKSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="RBSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
-[connection signal="floor_planned" from="RDSFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
+[connection signal="floor_planned" from="FloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="PACFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
 [connection signal="floor_planned" from="RWFloorArchitect" to="." method="_on_BaseFloorArchitect_FloorPlanned"]
